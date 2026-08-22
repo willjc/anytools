@@ -21,7 +21,7 @@ describe("getSiteUrl", () => {
 describe("getPrivateQueryUrl", () => {
   it("preserves the configured path", () => {
     expect(getPrivateQueryUrl("http://tools.example.com:9999/private-query")).toBe(
-      "http://tools.example.com:9999/private-query",
+      "http://tools.example.com:9999/private-query/",
     );
   });
 });

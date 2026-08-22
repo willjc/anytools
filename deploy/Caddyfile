@@ -1,5 +1,7 @@
 :8080 {
-  @privateQuery path /private-query /private-query/*
+  redir /private-query /private-query/ 308
+
+  @privateQuery path /private-query/*
   handle @privateQuery {
     reverse_proxy private-query:8080
   }

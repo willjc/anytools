@@ -33,7 +33,14 @@ export function getSiteUrl(value = process.env.NEXT_PUBLIC_SITE_URL): string {
 }
 
 export function getPrivateQueryUrl(value = process.env.NEXT_PUBLIC_PRIVATE_QUERY_URL): string | undefined {
-  return parseHttpUrl(value)?.toString();
+  const url = parseHttpUrl(value);
+  if (!url) return undefined;
+
+  if (!url.pathname.endsWith("/")) {
+    url.pathname = `${url.pathname}/`;
+  }
+
+  return url.toString();
 }
 
 export const siteUrl = getSiteUrl();
