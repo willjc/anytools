@@ -6,6 +6,7 @@ readonly RELEASES_DIR="$APP_ROOT/releases"
 readonly ENV_FILE="/etc/alltools/alltools.env"
 readonly PROJECT_NAME="alltools"
 readonly MAX_HEALTH_ATTEMPTS=24
+readonly SERVICES=(app gateway)
 
 release_id="${1:-}"
 if [[ ! "$release_id" =~ ^[a-f0-9]{40}$ ]]; then
@@ -35,26 +36,39 @@ compose=(env "RELEASE_ID=$release_id" docker compose --project-name "$PROJECT_NA
 "${compose[@]}" config --quiet
 "${compose[@]}" up --detach --build --remove-orphans
 
-container_id="$("${compose[@]}" ps --quiet app)"
-if [[ -z "$container_id" ]]; then
-  echo "The application container was not created." >&2
-  exit 67
-fi
+declare -A containers=()
+for service in "${SERVICES[@]}"; do
+  container_id="$("${compose[@]}" ps --quiet "$service")"
+  if [[ -z "$container_id" ]]; then
+    echo "The $service container was not created." >&2
+    exit 67
+  fi
+  containers["$service"]="$container_id"
+done
 
 for ((attempt = 1; attempt <= MAX_HEALTH_ATTEMPTS; attempt += 1)); do
-  health="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}unknown{{end}}' "$container_id")"
-  if [[ "$health" == "healthy" ]]; then
+  all_healthy=true
+  for service in "${SERVICES[@]}"; do
+    health="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}unknown{{end}}' "${containers[$service]}")"
+    if [[ "$health" == "unhealthy" ]]; then
+      all_healthy=false
+      break 2
+    fi
+    if [[ "$health" != "healthy" ]]; then
+      all_healthy=false
+    fi
+  done
+  if [[ "$all_healthy" == true ]]; then
     ln -sfn "$release_dir" "$APP_ROOT/current"
     echo "Release $release_id is healthy."
     exit 0
   fi
-  if [[ "$health" == "unhealthy" ]]; then
-    break
-  fi
   sleep 5
 done
 
-"${compose[@]}" logs --tail 100 app >&2 || true
+for service in "${SERVICES[@]}"; do
+  "${compose[@]}" logs --tail 100 "$service" >&2 || true
+done
 if [[ "$old_release_id" =~ ^[a-f0-9]{40}$ && -f "$old_release_dir/compose.yaml" ]]; then
   echo "Restoring previously healthy release $old_release_id." >&2
   env "RELEASE_ID=$old_release_id" docker compose \

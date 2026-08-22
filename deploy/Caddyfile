@@ -1,0 +1,10 @@
+:8080 {
+  @privateQuery path /private-query /private-query/*
+  handle @privateQuery {
+    reverse_proxy private-query:8080
+  }
+
+  handle {
+    reverse_proxy app:3000
+  }
+}

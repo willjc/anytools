@@ -5,9 +5,9 @@ export const site = {
   locale: "zh_CN",
 } as const;
 
-export function getSiteUrl(value = process.env.NEXT_PUBLIC_SITE_URL): string {
-  const fallback = "http://localhost:3000";
-  const candidate = value?.trim() || fallback;
+function getHttpUrl(value: string | undefined): string | undefined {
+  const candidate = value?.trim();
+  if (!candidate) return undefined;
 
   try {
     const url = new URL(candidate);
@@ -18,13 +18,19 @@ export function getSiteUrl(value = process.env.NEXT_PUBLIC_SITE_URL): string {
       url.username ||
       url.password
     ) {
-      return fallback;
+      return undefined;
     }
 
     return url.origin;
   } catch {
-    return fallback;
+    return undefined;
   }
 }
 
+export function getSiteUrl(value = process.env.NEXT_PUBLIC_SITE_URL): string {
+  const fallback = "http://localhost:3000";
+  return getHttpUrl(value) ?? fallback;
+}
+
 export const siteUrl = getSiteUrl();
+export const privateQueryUrl = getHttpUrl(process.env.NEXT_PUBLIC_PRIVATE_QUERY_URL);

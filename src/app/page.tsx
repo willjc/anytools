@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Check, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Check, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 
 import { ToolCard } from "@/components/tool-card";
+import { privateQueryUrl } from "@/lib/site";
 import { getToolsForCategory, toolCategories } from "@/lib/tools";
 
 export default function Home() {
@@ -88,6 +89,34 @@ export default function Home() {
           })}
         </div>
       </section>
+
+      {privateQueryUrl ? (
+        <section className="border-t border-slate-200 bg-slate-50">
+          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold tracking-[0.16em] text-slate-700">私密服务</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-slate-950">受保护查询</h2>
+              <p className="mt-4 text-base leading-7 text-slate-600">
+                需要访问密码。连续输错 3 次后将锁定 24 小时。
+              </p>
+            </div>
+            <a
+              className="group mt-8 flex max-w-xl items-center gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
+              href={privateQueryUrl}
+              rel="nofollow"
+            >
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-slate-950 text-white">
+                <LockKeyhole aria-hidden="true" className="size-6" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-lg font-semibold tracking-tight text-slate-950">进入受保护页面</span>
+                <span className="mt-1 block text-sm leading-6 text-slate-600">登录后才能发起和查看查询。</span>
+              </span>
+              <ArrowRight aria-hidden="true" className="ml-auto size-5 shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-slate-950" />
+            </a>
+          </div>
+        </section>
+      ) : null}
 
       <section className="border-y border-slate-200 bg-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-5 py-16 sm:px-8 md:grid-cols-3">
