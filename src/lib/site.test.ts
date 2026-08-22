@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getSiteUrl } from "@/lib/site";
+import { getPrivateQueryUrl, getSiteUrl } from "@/lib/site";
 
 describe("getSiteUrl", () => {
   it("normalizes a configured URL to its origin", () => {
@@ -14,6 +14,14 @@ describe("getSiteUrl", () => {
     expect(getSiteUrl("ftp://tools.example.com")).toBe("http://localhost:3000");
     expect(getSiteUrl("https://user:pass@tools.example.com")).toBe(
       "http://localhost:3000",
+    );
+  });
+});
+
+describe("getPrivateQueryUrl", () => {
+  it("preserves the configured path", () => {
+    expect(getPrivateQueryUrl("http://tools.example.com:9999/private-query")).toBe(
+      "http://tools.example.com:9999/private-query",
     );
   });
 });
