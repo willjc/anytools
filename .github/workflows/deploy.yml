@@ -1,0 +1,71 @@
+name: Deploy production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alltools-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    env:
+      DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+      DEPLOY_PORT: ${{ vars.DEPLOY_PORT }}
+      DEPLOY_USER: ci-deploy
+    steps:
+      - uses: actions/checkout@v6
+      - name: Configure deployment SSH key
+        env:
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          cat deploy/known_hosts >> "$HOME/.ssh/known_hosts"
+      - name: Upload immutable release
+        env:
+          RELEASE_ID: ${{ github.sha }}
+        run: |
+          test -n "$DEPLOY_HOST"
+          test -n "$DEPLOY_PORT"
+          ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p /opt/alltools/releases/$RELEASE_ID"
+          rsync --archive --delete \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=.learnings \
+            --exclude=.next \
+            --exclude=node_modules \
+            --exclude=.env \
+            --exclude='.env.*' \
+            -e "ssh -i $HOME/.ssh/id_ed25519 -p $DEPLOY_PORT" \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:/opt/alltools/releases/$RELEASE_ID/"
+      - name: Build, activate, and health-check release
+        env:
+          RELEASE_ID: ${{ github.sha }}
+        run: ssh -i "$HOME/.ssh/id_ed25519" -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "sudo -n /usr/local/sbin/alltools-deploy $RELEASE_ID"

@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly APP_ROOT="/opt/alltools"
+readonly RELEASES_DIR="$APP_ROOT/releases"
+readonly ENV_FILE="/etc/alltools/alltools.env"
+readonly PROJECT_NAME="alltools"
+readonly MAX_HEALTH_ATTEMPTS=24
+
+release_id="${1:-}"
+if [[ ! "$release_id" =~ ^[a-f0-9]{40}$ ]]; then
+  echo "Expected a 40-character lowercase Git commit SHA." >&2
+  exit 64
+fi
+
+release_dir="$RELEASES_DIR/$release_id"
+if [[ ! -f "$release_dir/compose.yaml" || ! -f "$release_dir/Dockerfile" || ! -f "$release_dir/package-lock.json" ]]; then
+  echo "Release $release_id is incomplete." >&2
+  exit 65
+fi
+
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "Missing $ENV_FILE." >&2
+  exit 66
+fi
+
+old_release_dir=""
+old_release_id=""
+if [[ -L "$APP_ROOT/current" ]]; then
+  old_release_dir="$(readlink -f "$APP_ROOT/current")"
+  old_release_id="${old_release_dir##*/}"
+fi
+
+compose=(env "RELEASE_ID=$release_id" docker compose --project-name "$PROJECT_NAME" --project-directory "$release_dir" --env-file "$ENV_FILE" -f "$release_dir/compose.yaml")
+"${compose[@]}" config --quiet
+"${compose[@]}" up --detach --build --remove-orphans
+
+container_id="$("${compose[@]}" ps --quiet app)"
+if [[ -z "$container_id" ]]; then
+  echo "The application container was not created." >&2
+  exit 67
+fi
+
+for ((attempt = 1; attempt <= MAX_HEALTH_ATTEMPTS; attempt += 1)); do
+  health="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}unknown{{end}}' "$container_id")"
+  if [[ "$health" == "healthy" ]]; then
+    ln -sfn "$release_dir" "$APP_ROOT/current"
+    echo "Release $release_id is healthy."
+    exit 0
+  fi
+  if [[ "$health" == "unhealthy" ]]; then
+    break
+  fi
+  sleep 5
+done
+
+"${compose[@]}" logs --tail 100 app >&2 || true
+if [[ "$old_release_id" =~ ^[a-f0-9]{40}$ && -f "$old_release_dir/compose.yaml" ]]; then
+  echo "Restoring previously healthy release $old_release_id." >&2
+  env "RELEASE_ID=$old_release_id" docker compose \
+    --project-name "$PROJECT_NAME" \
+    --project-directory "$old_release_dir" \
+    --env-file "$ENV_FILE" \
+    -f "$old_release_dir/compose.yaml" \
+    up --detach --no-build --remove-orphans >&2
+fi
+echo "Release $release_id did not become healthy." >&2
+exit 68
