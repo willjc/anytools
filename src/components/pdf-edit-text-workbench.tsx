@@ -14,6 +14,9 @@ type PendingPatch = {
   pageNumber: number;
   selection: Selection;
   patch: TextPatch;
+  // The replacement text captured when the box was drawn; rendered into the
+  // patch automatically at export time.
+  replacementText: string;
 };
 
 async function renderReplacementToPng(value: string, boxWidthPx: number, boxHeightPx: number): Promise<{ bytes: Uint8Array; drawWidthPt: number; drawHeightPt: number }> {
@@ -161,12 +164,21 @@ export function PdfEditTextWorkbench() {
     const patchY = pageSizePt.height - (selection.top + selection.height) * scalePtPerPxY;
 
     const id = `patch-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const replacementText = replacement.trim();
+    if (!replacementText) {
+      setMessage("请先在右侧输入替换后的文字，再框选要遮盖的位置。\n");
+      setSelection(undefined);
+      setDragStart(undefined);
+      return;
+    }
+
     setPatches((current) => [
       ...current,
       {
         id,
         pageNumber,
         selection,
+        replacementText,
         patch: {
           pageNumber: pageNumber - 1,
           x: patchX,
@@ -174,42 +186,32 @@ export function PdfEditTextWorkbench() {
           width: patchWidth,
           height: patchHeight,
           fontSize: Math.max(6, patchHeight * 0.72),
-          content: { kind: "text", value: replacement.trim() || " " },
+          // The real content is rendered from replacementText at export time.
+          content: { kind: "text", value: replacementText },
         },
       },
     ]);
     setSelection(undefined);
     setDragStart(undefined);
-    setMessage("已记录一处修改，可继续框选或导出。");
-  }
-
-  async function applyReplacement(id: string) {
-    if (!replacement.trim()) {
-      setMessage("请先输入替换后的文字。\n");
-      return;
-    }
-
-    const rendered = await renderReplacementToPng(replacement.trim(), 200, 20);
-    setPatches((current) =>
-      current.map((entry) =>
-        entry.id === id
-          ? { ...entry, patch: { ...entry.patch, content: { kind: "png", bytes: rendered.bytes, drawWidthPt: entry.patch.width, drawHeightPt: entry.patch.height } } }
-          : entry,
-      ),
-    );
+    setMessage("已记录一处修改，可继续框选其他位置，或直接导出。");
   }
 
   async function exportPdf() {
     if (!file || !sourceBytes || patches.length === 0) return;
-    if (patches.some((entry) => entry.patch.content.kind === "text")) {
-      setMessage("请先为每处修改填写替换文字。\n");
-      return;
-    }
 
     setIsProcessing(true);
     setMessage("正在浏览器本地生成新 PDF…");
     try {
-      const bytes = await coverAndWriteText(sourceBytes, patches.map((entry) => entry.patch));
+      const pending: TextPatch[] = [];
+      for (const entry of patches) {
+        const rendered = await renderReplacementToPng(entry.replacementText, 400, 40);
+        pending.push({
+          ...entry.patch,
+          content: { kind: "png", bytes: rendered.bytes, drawWidthPt: entry.patch.width, drawHeightPt: entry.patch.height },
+        });
+      }
+
+      const bytes = await coverAndWriteText(sourceBytes, pending);
       triggerDownload(new Blob([Uint8Array.from(bytes)], { type: "application/pdf" }), getDownloadFileName(file.name, "-edited", "pdf"));
       setMessage("修改完成，下载应已开始。");
     } catch (error) {
@@ -259,16 +261,13 @@ export function PdfEditTextWorkbench() {
 
         <div className="space-y-4">
           <label className="block text-sm font-semibold text-slate-900" htmlFor="edit-replacement">替换后的文字</label>
-          <input className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" id="edit-replacement" onChange={(event) => setReplacement(event.target.value)} placeholder="输入用来遮盖原文的新文字" type="text" value={replacement} />
-          <p className="text-xs leading-5 text-slate-500">框选后会用白色遮盖原区域并写入上面的文字；支持中文。适合改正错别字、金额、日期等简单场景。</p>
+          <input className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" id="edit-replacement" onChange={(event) => setReplacement(event.target.value)} placeholder="先在这里输入新文字，再去框选" type="text" value={replacement} />
+          <p className="text-xs leading-5 text-slate-500">用法：① 先输入新文字 → ② 在左侧预览里框选要改掉的旧文字 → ③ 点导出。支持中文。</p>
 
           <ul className="space-y-2">
             {patches.map((entry, index) => (
               <li className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700" key={entry.id}>
-                <span className="min-w-0 flex-1 truncate">修改 {index + 1} · 第 {entry.pageNumber} 页</span>
-                {entry.patch.content.kind === "text" && (
-                  <button className="rounded-lg bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100" onClick={() => void applyReplacement(entry.id)} type="button">写入文字</button>
-                )}
+                <span className="min-w-0 flex-1 truncate">修改 {index + 1} · 第 {entry.pageNumber} 页 →「{entry.replacementText}」</span>
                 <button aria-label="删除修改" className="rounded-md p-1 text-slate-400 transition hover:bg-red-50 hover:text-red-600" onClick={() => setPatches((current) => current.filter((item) => item.id !== entry.id))} type="button"><Trash2 className="size-4" /></button>
               </li>
             ))}
