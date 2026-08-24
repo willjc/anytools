@@ -12,14 +12,21 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
   return withTempDir("alltools-docx-", async (dir) => {
     const input = join(dir, "input.pdf");
     await writeFile(input, inputBytes);
-    await run("soffice", [
-      "-env:UserInstallation=file:///tmp/alltools-lo-profile",
-      "--headless",
-      "--norestore",
-      "--convert-to", "docx:MS Word 2007 XML",
-      "--outdir", dir,
-      input,
-    ]);
+
+    try {
+      await run("soffice", [
+        "-env:UserInstallation=file:///tmp/alltools-lo-profile",
+        "--headless",
+        "--norestore",
+        "--convert-to", "docx:MS Word 2007 XML",
+        "--outdir", dir,
+        input,
+      ]);
+    } catch (error) {
+      const output = error && typeof error === "object" ? [error.stderr, error.stdout].filter(Boolean).join("\n") : "";
+      const tail = output.trim().slice(-400);
+      throw new Error(tail ? `LibreOffice 转换出错：${tail}` : "LibreOffice 转换进程异常退出。");
+    }
 
     const produced = (await readdir(dir)).find((name) => name.endsWith(".docx"));
     if (!produced) {
