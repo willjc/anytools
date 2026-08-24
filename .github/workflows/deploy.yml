@@ -32,7 +32,7 @@ jobs:
   deploy:
     needs: verify
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     environment: production
     env:
       DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
