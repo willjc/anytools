@@ -23,7 +23,8 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
         input,
       ]);
     } catch (error) {
-      const output = error && typeof error === "object" ? [error.stderr, error.stdout].filter(Boolean).join("\n") : "";
+      const captured = error as { stderr?: string; stdout?: string };
+      const output = [captured.stderr, captured.stdout].filter(Boolean).join("\n");
       const tail = output.trim().slice(-400);
       throw new Error(tail ? `LibreOffice 转换出错：${tail}` : "LibreOffice 转换进程异常退出。");
     }
