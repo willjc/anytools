@@ -13,8 +13,9 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
     const input = join(dir, "input.pdf");
     await writeFile(input, inputBytes);
 
+    let result;
     try {
-      await run("soffice", [
+      result = await run("soffice", [
         "-env:UserInstallation=file:///tmp/alltools-lo-profile",
         "--headless",
         "--norestore",
@@ -31,7 +32,9 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
 
     const produced = (await readdir(dir)).find((name) => name.endsWith(".docx"));
     if (!produced) {
-      throw new Error("转换失败：无法从该 PDF 提取可编辑内容。");
+      const listing = (await readdir(dir)).join(", ") || "(empty)";
+      const output = [result.stderr, result.stdout].filter(Boolean).join("\n").trim().slice(-400);
+      throw new Error(`转换未产出文档（目录：${listing}）。LibreOffice 输出：${output || "(无)"}`);
     }
     return new Uint8Array(await readFile(join(dir, produced)));
   });
