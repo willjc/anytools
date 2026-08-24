@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 
@@ -7,8 +7,18 @@ import { requireBinary, withTempDir } from "@/lib/server/tool-runtime";
 
 const run = promisify(execFile);
 
+// The production container runs with a read-only root filesystem; LibreOffice
+// insists on a writable HOME for its profile, locks, and fontconfig cache,
+// so everything lives under /tmp instead.
+async function prepareLibreOfficeHome(): Promise<string> {
+  const home = "/tmp/alltools-lo-home";
+  await mkdir(join(home, ".cache"), { recursive: true });
+  return home;
+}
+
 export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Array> {
   await requireBinary("soffice", "安装 LibreOffice 后该功能可用。");
+  const loHome = await prepareLibreOfficeHome();
   return withTempDir("alltools-docx-", async (dir) => {
     const input = join(dir, "input.pdf");
     await writeFile(input, inputBytes);
@@ -17,12 +27,15 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
     try {
       result = await run("soffice", [
         "-env:UserInstallation=file:///tmp/alltools-lo-profile",
+        "-env:XDG_CONFIG_HOME=file:///tmp/alltools-lo-home",
         "--headless",
         "--norestore",
         "--convert-to", "docx:MS Word 2007 XML",
         "--outdir", dir,
         input,
-      ]);
+      ], {
+        env: { ...process.env, HOME: loHome, XDG_CACHE_HOME: join(loHome, ".cache") },
+      });
     } catch (error) {
       const captured = error as { stderr?: string; stdout?: string };
       const output = [captured.stderr, captured.stdout].filter(Boolean).join("\n");
