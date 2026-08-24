@@ -21,7 +21,11 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
   const loHome = await prepareLibreOfficeHome();
   return withTempDir("alltools-docx-", async (dir) => {
     const input = join(dir, "input.pdf");
+    const outDir = join(loHome, "out");
     await writeFile(input, inputBytes);
+    // Without this infilter LibreOffice imports the PDF into Draw, whose
+    // documents cannot be stored through the Writer docx filter.
+    await mkdir(outDir, { recursive: true });
 
     let result;
     try {
@@ -30,8 +34,9 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
         "-env:XDG_CONFIG_HOME=file:///tmp/alltools-lo-home",
         "--headless",
         "--norestore",
+        "--infilter=writer_pdf_import",
         "--convert-to", "docx:MS Word 2007 XML",
-        "--outdir", dir,
+        "--outdir", outDir,
         input,
       ], {
         env: { ...process.env, HOME: loHome, XDG_CACHE_HOME: join(loHome, ".cache") },
@@ -43,12 +48,12 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
       throw new Error(tail ? `LibreOffice 转换出错：${tail}` : "LibreOffice 转换进程异常退出。");
     }
 
-    const produced = (await readdir(dir)).find((name) => name.endsWith(".docx"));
+    const produced = (await readdir(outDir)).find((name) => name.endsWith(".docx"));
     if (!produced) {
       const listing = (await readdir(dir)).join(", ") || "(empty)";
       const output = [result.stderr, result.stdout].filter(Boolean).join("\n").trim().slice(-400);
       throw new Error(`转换未产出文档（目录：${listing}）。LibreOffice 输出：${output || "(无)"}`);
     }
-    return new Uint8Array(await readFile(join(dir, produced)));
+    return new Uint8Array(await readFile(join(outDir, produced)));
   });
 }
