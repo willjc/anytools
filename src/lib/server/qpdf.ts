@@ -1,37 +1,18 @@
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { promisify } from "node:util";
 
+import { requireBinary, withTempDir } from "@/lib/server/tool-runtime";
+
 const run = promisify(execFile);
 
-export class CloudToolUnavailableError extends Error {
-  constructor() {
-    super("服务器尚未安装 qpdf，该功能暂不可用。");
-    this.name = "CloudToolUnavailableError";
-  }
-}
-
-async function assertQpdfAvailable() {
-  try {
-    await run("qpdf", ["--version"]);
-  } catch (error) {
-    if (error && typeof error === "object" && "code" in error && (error as { code?: string }).code === "ENOENT") {
-      throw new CloudToolUnavailableError();
-    }
-    throw error;
-  }
-}
-
 export async function compressPdfWithQpdf(inputBytes: Uint8Array): Promise<Uint8Array> {
-  await assertQpdfAvailable();
+  await requireBinary("qpdf", "安装 qpdf 后该功能可用。");
+  return withTempDir("alltools-compress-", async (dir) => {
+    const inputPath = join(dir, "input.pdf");
+    const outputPath = join(dir, "output.pdf");
 
-  const workDir = await mkdtemp(join(tmpdir(), "alltools-compress-"));
-  const inputPath = join(workDir, "input.pdf");
-  const outputPath = join(workDir, "output.pdf");
-
-  try {
     await writeFile(inputPath, inputBytes);
     // Recompress streams and generate object streams; content is unchanged visually.
     await run("qpdf", [
@@ -43,7 +24,5 @@ export async function compressPdfWithQpdf(inputBytes: Uint8Array): Promise<Uint8
       outputPath,
     ]);
     return new Uint8Array(await readFile(outputPath));
-  } finally {
-    await rm(workDir, { recursive: true, force: true });
-  }
+  });
 }

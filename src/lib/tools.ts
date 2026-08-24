@@ -160,7 +160,7 @@ export const tools: readonly ToolDefinition[] = [
     keywords: ["PDF 转 Word", "PDF 转 docx", "PDF 可编辑", "PDF 转换器"],
     icon: "fileWord",
     processing: "cloud",
-    availability: "comingSoon",
+    availability: "ready",
     accepts: [".pdf"],
   },
   {
@@ -272,7 +272,7 @@ export const tools: readonly ToolDefinition[] = [
     keywords: ["HEIC 转 JPG", "HEIC 转换", "iPhone 照片格式", "HEIF 转 JPEG"],
     icon: "convert",
     processing: "cloud",
-    availability: "comingSoon",
+    availability: "ready",
     accepts: [".heic", ".heif"],
   },
   {
@@ -314,7 +314,7 @@ export const tools: readonly ToolDefinition[] = [
     keywords: ["视频压缩", "视频变小", "压缩 MP4", "微信发视频"],
     icon: "video",
     processing: "cloud",
-    availability: "comingSoon",
+    availability: "ready",
     accepts: [".mp4", ".mov", ".mkv", ".avi"],
   },
   {
@@ -328,7 +328,7 @@ export const tools: readonly ToolDefinition[] = [
     keywords: ["视频提取音频", "视频转 MP3", "提取声音", "视频音乐提取"],
     icon: "music",
     processing: "cloud",
-    availability: "comingSoon",
+    availability: "ready",
     accepts: [".mp4", ".mov", ".mkv", ".webm"],
   },
   {
@@ -342,7 +342,7 @@ export const tools: readonly ToolDefinition[] = [
     keywords: ["音频格式转换", "MP3 转 WAV", "M4A 转 MP3", "音频转换器"],
     icon: "convert",
     processing: "cloud",
-    availability: "comingSoon",
+    availability: "ready",
     accepts: [".mp3", ".wav", ".m4a", ".aac", ".flac"],
   },
   {

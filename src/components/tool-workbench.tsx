@@ -1,4 +1,6 @@
 import { ImageCropWorkbench } from "@/components/image-crop-workbench";
+import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
+import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
 import { ImageStitchWorkbench } from "@/components/image-stitch-workbench";
 import { ImageWatermarkWorkbench } from "@/components/image-watermark-workbench";
@@ -11,11 +13,14 @@ import { PdfMergeWorkbench } from "@/components/pdf-merge-workbench";
 import { PdfOrganizeWorkbench } from "@/components/pdf-organize-workbench";
 import { PdfPageNumbersWorkbench } from "@/components/pdf-page-numbers-workbench";
 import { PdfSplitWorkbench } from "@/components/pdf-split-workbench";
+import { PdfToWordWorkbench } from "@/components/pdf-to-word-workbench";
 import { PdfWatermarkWorkbench } from "@/components/pdf-watermark-workbench";
 import { QrCodeWorkbench } from "@/components/qr-code-workbench";
 import { RmbUppercaseWorkbench } from "@/components/rmb-uppercase-workbench";
 import { ToolWorkbenchPlaceholder } from "@/components/tool-workbench-placeholder";
 import { UnitConversionWorkbench } from "@/components/unit-conversion-workbench";
+import { VideoCompressWorkbench } from "@/components/video-compress-workbench";
+import { VideoToAudioWorkbench } from "@/components/video-to-audio-workbench";
 import type { ToolDefinition } from "@/lib/tools";
 
 export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
@@ -36,6 +41,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <PdfPageNumbersWorkbench />;
     case "pdf-edit-text":
       return <PdfEditTextWorkbench />;
+    case "pdf-to-word":
+      return <PdfToWordWorkbench />;
     case "pdf-compress":
       return <PdfCompressWorkbench />;
     case "image-compress":
@@ -44,6 +51,14 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <ImageWorkbench mode="convert" />;
     case "image-crop":
       return <ImageCropWorkbench />;
+    case "heic-to-jpg":
+      return <HeicToJpgWorkbench />;
+    case "video-compress":
+      return <VideoCompressWorkbench />;
+    case "video-to-audio":
+      return <VideoToAudioWorkbench />;
+    case "audio-convert":
+      return <AudioConvertWorkbench />;
     case "image-watermark":
       return <ImageWatermarkWorkbench />;
     case "image-stitch":

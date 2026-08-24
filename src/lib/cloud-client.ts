@@ -1,6 +1,9 @@
-export async function uploadForProcessing(slug: string, file: File): Promise<Blob> {
+export async function uploadForProcessing(slug: string, file: File, extraFields?: Record<string, string>): Promise<Blob> {
   const formData = new FormData();
   formData.append("file", file);
+  for (const [key, value] of Object.entries(extraFields ?? {})) {
+    formData.append(key, value);
+  }
 
   const response = await fetch(`/api/tools/${slug}`, {
     method: "POST",
