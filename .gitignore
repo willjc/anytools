@@ -43,3 +43,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Browser/test artifacts (may contain user documents)
+.playwright-mcp/
+gui-test-screenshots/

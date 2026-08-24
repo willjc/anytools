@@ -148,11 +148,17 @@ export function PdfEditTextWorkbench() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const scalePtPerPx = pageSizePt.width / canvas.width;
+    // The selection is tracked in CSS pixels of the displayed canvas, so
+    // convert with the on-screen size — canvas.width is the render resolution
+    // and can be much larger than what is shown.
+    const displayedWidth = canvas.clientWidth || canvas.width;
+    const displayedHeight = canvas.clientHeight || canvas.height;
+    const scalePtPerPx = pageSizePt.width / displayedWidth;
+    const scalePtPerPxY = pageSizePt.height / displayedHeight;
     const patchX = selection.left * scalePtPerPx;
     const patchWidth = selection.width * scalePtPerPx;
-    const patchHeight = selection.height * (pageSizePt.height / canvas.height);
-    const patchY = pageSizePt.height - (selection.top + selection.height) * (pageSizePt.height / canvas.height);
+    const patchHeight = selection.height * scalePtPerPxY;
+    const patchY = pageSizePt.height - (selection.top + selection.height) * scalePtPerPxY;
 
     const id = `patch-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     setPatches((current) => [
