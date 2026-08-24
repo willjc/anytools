@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getToolBySlug, getToolsForCategory, tools } from "@/lib/tools";
+import { getToolBySlug, getToolsForCategory, toolCategories, tools } from "@/lib/tools";
 
 describe("tool registry", () => {
   it("uses unique stable slugs", () => {
@@ -14,6 +14,25 @@ describe("tool registry", () => {
     expect(getToolsForCategory("image").map((tool) => tool.slug)).toEqual([
       "image-compress",
       "image-convert",
+      "image-crop",
+      "image-watermark",
+      "image-stitch",
+      "image-grid",
+      "heic-to-jpg",
+      "image-cutout",
     ]);
+  });
+
+  it("covers every declared category and keeps SEO fields filled", () => {
+    const usedCategories = new Set(tools.map((tool) => tool.category));
+    for (const category of toolCategories) {
+      expect(usedCategories.has(category.id)).toBe(true);
+    }
+    for (const tool of tools) {
+      expect(tool.keywords.length).toBeGreaterThan(0);
+      expect(tool.longDescription.length).toBeGreaterThan(0);
+      expect(["browser", "cloud"]).toContain(tool.processing);
+      expect(["ready", "comingSoon"]).toContain(tool.availability);
+    }
   });
 });

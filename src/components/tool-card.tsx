@@ -22,7 +22,7 @@ export function ToolCard({ tool }: { tool: ToolDefinition }) {
       <h3 className="text-lg font-semibold tracking-tight text-slate-950">{tool.name}</h3>
       <p className="mt-2 text-sm leading-6 text-slate-600">{tool.description}</p>
       <span className={`mt-auto pt-5 text-sm font-medium ${tool.availability === "ready" ? "text-emerald-700" : "text-amber-700"}`}>
-        {tool.availability === "ready" ? "浏览器本地处理" : "即将上线"}
+        {tool.availability === "comingSoon" ? "即将上线" : tool.processing === "cloud" ? "云端处理 · 即时删除" : "浏览器本地处理"}
       </span>
     </Link>
   );

@@ -23,7 +23,10 @@ ENV PORT=3000
 WORKDIR /app
 
 RUN groupadd --system --gid 1001 nodejs \
-  && useradd --system --uid 1001 --gid nodejs nextjs
+  && useradd --system --uid 1001 --gid nodejs nextjs \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends qpdf \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

@@ -22,7 +22,7 @@ export function ToolWorkbenchPlaceholder({ tool }: { tool: ToolDefinition }) {
       <div className="mt-7 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center sm:p-12">
         <p className="text-base font-semibold text-slate-900">该工具暂未开放</p>
         <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600">
-          {tool.name} 的本地处理界面正在开发。当前不能上传、处理或下载文件。
+          {tool.name}正在开发中，开放后将通过{tool.processing === "cloud" ? "服务器端" : "浏览器本地"}完成处理。当前不能上传、处理或下载文件。
         </p>
       </div>
 

@@ -13,14 +13,14 @@ export default function Home() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/75 px-3 py-1.5 text-sm font-medium text-emerald-800 shadow-sm">
               <Sparkles aria-hidden="true" className="size-4" />
-              文件留在你的浏览器里
+              20 个实用工具 · 多数本地处理
             </div>
             <h1 className="mt-7 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] text-slate-950 sm:text-6xl">
               常用文件处理，
               <span className="text-emerald-700">打开就能用。</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              拆 PDF、转换图片、压缩文件、生成二维码。选择一个工具，在浏览器内完成处理并直接下载结果。
+              合并 PDF、改字、压缩，裁剪拼图、换算计算。选一个工具马上开始，多数工具文件不出浏览器。
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -40,11 +40,11 @@ export default function Home() {
           <div className="relative mx-auto w-full max-w-md rounded-[2rem] border border-white/90 bg-white/75 p-5 shadow-[0_28px_90px_rgba(15,23,42,0.13)] backdrop-blur-sm">
             <div className="rounded-[1.5rem] bg-slate-950 p-6 text-white">
               <div className="flex items-center justify-between text-sm text-slate-300">
-                <span>本地工作流</span>
-                <span className="rounded-full bg-emerald-400/15 px-2.5 py-1 text-xs font-medium text-emerald-300">无需上传</span>
+                <span>三步完成</span>
+                <span className="rounded-full bg-emerald-400/15 px-2.5 py-1 text-xs font-medium text-emerald-300">多数免上传</span>
               </div>
               <ol className="mt-8 space-y-5">
-                {["选择一个工具", "在浏览器中处理文件", "下载结果"].map((item, index) => (
+                {["选择一个工具", "处理文件或输入内容", "下载结果"].map((item, index) => (
                   <li className="flex items-center gap-4" key={item}>
                     <span className="grid size-8 place-items-center rounded-full bg-white/10 text-sm font-medium text-emerald-300">{index + 1}</span>
                     <span className="font-medium">{item}</span>
@@ -55,7 +55,7 @@ export default function Home() {
             </div>
             <div className="mt-4 flex items-start gap-3 rounded-2xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
               <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-emerald-700" />
-              PDF、图片和文本默认在本地处理。未来需要云端耗时处理的功能会明确提示并单独计费。
+              多数工具在浏览器本地完成，文件不离开设备；标注「云端处理」的功能由服务器即时处理、用后即删。
             </div>
           </div>
         </div>
