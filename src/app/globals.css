@@ -1,8 +1,36 @@
 @import "tailwindcss";
 
+/*
+ * 万用工具箱设计语言 —— 详见仓库根目录 DESIGN.md。
+ * 核心思路:暖纸感画布 + 炭墨文字 + 翡翠主色。
+ * slate 色阶在此整体重映射为暖中性色(Notion 式),
+ * 因此全站 slate-* 类无需逐个修改即可获得统一暖色调。
+ */
+
 :root {
-  --background: #fcfdfb;
-  --foreground: #0f172a;
+  --background: #faf9f6;
+  --foreground: #21201c;
+  --hairline: #e7e4df;
+  --shadow-color: 28 25 23;
+}
+
+/* 暖中性色阶:覆盖 Tailwind 默认 slate(冷蓝灰) */
+@theme {
+  --color-slate-50: #fafaf9;
+  --color-slate-100: #f1efec;
+  --color-slate-200: #e7e4df;
+  --color-slate-300: #d4d0c9;
+  --color-slate-400: #a5a199;
+  --color-slate-500: #7c7973;
+  --color-slate-600: #5f5d56;
+  --color-slate-700: #47453f;
+  --color-slate-800: #31302b;
+  --color-slate-900: #21201c;
+  --color-slate-950: #151412;
+
+  /* 海拔体系:卡片静置 / 卡片悬浮 */
+  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px rgb(28 25 23 / 0.05);
+  --shadow-lift: 0 2px 4px rgb(28 25 23 / 0.05), 0 18px 44px rgb(28 25 23 / 0.10);
 }
 
 @theme inline {
@@ -15,7 +43,15 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    sans-serif;
 }
 
 ::selection {

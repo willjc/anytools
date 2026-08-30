@@ -8,7 +8,7 @@ import { getToolsForCategory, toolCategories } from "@/lib/tools";
 export default function Home() {
   return (
     <div className="overflow-hidden">
-      <section className="relative isolate border-b border-slate-200 bg-[radial-gradient(circle_at_80%_0%,#d1fae5_0,transparent_31%),radial-gradient(circle_at_2%_35%,#e0f2fe_0,transparent_25%)]">
+      <section className="relative isolate border-b border-slate-200 bg-[radial-gradient(circle_at_80%_0%,#d9f3e1_0,transparent_31%),radial-gradient(circle_at_2%_35%,#dcecfa_0,transparent_25%)]">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-20 sm:px-8 md:grid-cols-[1.1fr_.9fr] md:items-center md:py-28">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/75 px-3 py-1.5 text-sm font-medium text-emerald-800 shadow-sm">
@@ -37,7 +37,7 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-md rounded-[2rem] border border-white/90 bg-white/75 p-5 shadow-[0_28px_90px_rgba(15,23,42,0.13)] backdrop-blur-sm">
+          <div className="relative mx-auto w-full max-w-md rounded-[2rem] border border-white/90 bg-white/75 p-5 shadow-[0_28px_90px_rgba(28,25,23,0.13)] backdrop-blur-sm">
             <div className="rounded-[1.5rem] bg-slate-950 p-6 text-white">
               <div className="flex items-center justify-between text-sm text-slate-300">
                 <span>三步完成</span>
@@ -101,7 +101,7 @@ export default function Home() {
               </p>
             </div>
             <a
-              className="group mt-8 flex max-w-xl items-center gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_8px_30px_rgba(15,23,42,0.04)] transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
+              className="group mt-8 flex max-w-xl items-center gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-card transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_45px_rgba(28,25,23,0.1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
               href={privateQueryUrl}
               rel="nofollow"
             >
