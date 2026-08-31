@@ -8,6 +8,7 @@ import {
   Eraser,
   FileStack,
   FileType,
+  Globe,
   Hash,
   Home,
   ImageIcon,
@@ -49,6 +50,7 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   calendar: CalendarDays,
   banknote: Banknote,
   home: Home,
+  globe: Globe,
 };
 
 export function ToolIcon({

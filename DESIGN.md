@@ -51,6 +51,7 @@
 | create | `#fef7d6` 淡黄 | amber-800 |
 | av | `#e6e0f5` 淡紫 | violet-800 |
 | life | `#ffe8d4` 蜜桃 | orange-800 |
+| network | `#d7f0ee` 青绿 | teal-800 |
 
 ## 3. 字体规则
 

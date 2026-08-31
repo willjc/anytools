@@ -24,6 +24,11 @@ export const toolCategories = [
     label: "生活工具",
     description: "换算、日期与金额计算的日常小帮手。",
   },
+  {
+    id: "network",
+    label: "网络工具",
+    description: "查 IP、解析域名，网络信息一查便知。",
+  },
 ] as const;
 
 export type ToolCategory = (typeof toolCategories)[number]["id"];
@@ -58,10 +63,15 @@ export type ToolDefinition = {
     | "ruler"
     | "calendar"
     | "banknote"
-    | "home";
+    | "home"
+    | "globe";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
+  /** 覆盖卡片底部默认的处理方式标签 */
+  cardTag?: string;
+  /** 覆盖详情页「如何使用」的默认三步 */
+  usageSteps?: readonly [string, string, string];
 };
 
 export const tools: readonly ToolDefinition[] = [
@@ -414,6 +424,26 @@ export const tools: readonly ToolDefinition[] = [
     processing: "browser",
     availability: "ready",
     accepts: ["数值"],
+  },
+  {
+    slug: "ip-lookup",
+    category: "network",
+    name: "IP 查询",
+    shortName: "IP 查询",
+    description: "查看你的 IP 归属地，或查询任意网站的解析 IP。",
+    longDescription:
+      "自动显示当前访问者使用的 IP 及其运营商与大致位置；输入任意域名即可查询网站的 A/AAAA/CNAME/MX/NS 等解析记录，并标注每台服务器的归属地。查询在服务器端即时完成，不保存任何记录。",
+    keywords: ["IP 查询", "查 IP", "域名解析查询", "网站 IP 查询", "我的 IP"],
+    icon: "globe",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["域名", "IP 地址"],
+    cardTag: "在线查询 · 免安装",
+    usageSteps: [
+      "打开工具页即可看到你当前的 IP 与归属地",
+      "输入任意域名（或直接输入 IP），点击查询",
+      "即时返回解析记录与服务器归属地，不保存查询历史",
+    ],
   },
 ] as const;
 

@@ -85,11 +85,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
       <section className="mt-12 rounded-3xl bg-slate-100 p-6 sm:p-8">
         <h2 className="text-lg font-semibold text-slate-950">如何使用</h2>
         <ol className="mt-5 grid gap-4 text-sm leading-6 text-slate-600 sm:grid-cols-3">
-          {(tool.availability === "comingSoon"
-            ? ["该工具正在开发", "现阶段不能上传或处理文件", "开放后会在此页面直接使用"]
-            : tool.processing === "cloud"
-              ? ["选择文件并上传到服务器", "服务器完成后自动开始下载", "文件处理后立即删除，不做保存"]
-              : ["打开工具页并选择文件或输入内容", "在浏览器中设置所需选项", "下载处理结果，原始文件不会上传"]
+          {(tool.usageSteps
+            ? tool.usageSteps
+            : tool.availability === "comingSoon"
+              ? ["该工具正在开发", "现阶段不能上传或处理文件", "开放后会在此页面直接使用"]
+              : tool.processing === "cloud"
+                ? ["选择文件并上传到服务器", "服务器完成后自动开始下载", "文件处理后立即删除，不做保存"]
+                : ["打开工具页并选择文件或输入内容", "在浏览器中设置所需选项", "下载处理结果，原始文件不会上传"]
           ).map((step, index) => (
             <li className="rounded-2xl bg-white p-4" key={step}>
               <span className="text-sm font-semibold text-emerald-700">0{index + 1}</span>

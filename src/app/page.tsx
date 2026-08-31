@@ -3,9 +3,11 @@ import { ArrowRight, Check, LockKeyhole, ShieldCheck, Sparkles } from "lucide-re
 
 import { ToolCard } from "@/components/tool-card";
 import { privateQueryUrl } from "@/lib/site";
-import { getToolsForCategory, toolCategories } from "@/lib/tools";
+import { getToolsForCategory, toolCategories, tools } from "@/lib/tools";
 
 export default function Home() {
+  const readyCount = tools.filter((tool) => tool.availability === "ready").length;
+
   return (
     <div className="overflow-hidden">
       <section className="relative isolate border-b border-slate-200 bg-[radial-gradient(circle_at_80%_0%,#d9f3e1_0,transparent_31%),radial-gradient(circle_at_2%_35%,#dcecfa_0,transparent_25%)]">
@@ -13,7 +15,7 @@ export default function Home() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/75 px-3 py-1.5 text-sm font-medium text-emerald-800 shadow-sm">
               <Sparkles aria-hidden="true" className="size-4" />
-              20 个实用工具 · 多数本地处理
+              {readyCount} 个实用工具 · 多数本地处理
             </div>
             <h1 className="mt-7 max-w-3xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] text-slate-950 sm:text-6xl">
               常用文件处理，

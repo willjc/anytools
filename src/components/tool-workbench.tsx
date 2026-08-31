@@ -3,6 +3,7 @@ import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
 import { ImageStitchWorkbench } from "@/components/image-stitch-workbench";
+import { IpLookupWorkbench } from "@/components/ip-lookup-workbench";
 import { ImageWatermarkWorkbench } from "@/components/image-watermark-workbench";
 import { ImageWorkbench } from "@/components/image-workbench";
 import { DateCalculatorWorkbench } from "@/components/date-calculator-workbench";
@@ -75,6 +76,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <RmbUppercaseWorkbench />;
     case "mortgage-calculator":
       return <MortgageWorkbench />;
+    case "ip-lookup":
+      return <IpLookupWorkbench />;
     default:
       return <ToolWorkbenchPlaceholder tool={tool} />;
   }
