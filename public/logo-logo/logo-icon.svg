@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="logo-icon-title">
+  <title id="logo-icon-title">万用工具箱图标</title>
+  <rect x="16" y="32" width="96" height="80" rx="24" fill="#151412"/>
+  <path d="M44 32v-6c0-8 6-14 14-14h12c8 0 14 6 14 14v6" fill="none" stroke="#047857" stroke-width="10" stroke-linecap="round"/>
+  <path d="M36 58h56v12H36zm0 24h34v12H36zm44 0h12v12H80z" fill="#047857"/>
+</svg>

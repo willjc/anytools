@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Boxes } from "lucide-react";
+import Image from "next/image";
 
 import { site } from "@/lib/site";
 
@@ -8,13 +8,10 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
         <Link
-          className="flex items-center gap-2 font-semibold tracking-tight text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600"
+          className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600"
           href="/"
         >
-          <span className="grid size-8 place-items-center rounded-xl bg-slate-950 text-white">
-            <Boxes aria-hidden="true" className="size-4" />
-          </span>
-          {site.shortName}
+          <Image alt={site.shortName} height={32} priority src="/logo-logo/logo.svg" width={150} />
         </Link>
         <nav aria-label="主导航" className="flex items-center gap-5 text-sm font-medium text-slate-600">
           <Link className="transition hover:text-slate-950" href="/#tools">
