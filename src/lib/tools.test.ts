@@ -19,7 +19,6 @@ describe("tool registry", () => {
       "image-stitch",
       "image-grid",
       "heic-to-jpg",
-      "image-cutout",
     ]);
   });
 
@@ -32,7 +31,7 @@ describe("tool registry", () => {
       expect(tool.keywords.length).toBeGreaterThan(0);
       expect(tool.longDescription.length).toBeGreaterThan(0);
       expect(["browser", "cloud"]).toContain(tool.processing);
-      expect(["ready", "comingSoon"]).toContain(tool.availability);
+      expect(tool.availability).toBe("ready");
     }
   });
 });

@@ -1,15 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import { Download, LoaderCircle, QrCode } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Download, LoaderCircle, QrCode, Trash2 } from "lucide-react";
 import QRCode from "qrcode";
+
+import { parseQrHistory, QR_HISTORY_KEY, QR_HISTORY_LIMIT, type QrHistoryEntry } from "@/lib/qr-history";
 
 export function QrCodeWorkbench() {
   const [content, setContent] = useState("");
   const [size, setSize] = useState(512);
   const [dataUrl, setDataUrl] = useState("");
+  const [history, setHistory] = useState<QrHistoryEntry[]>([]);
   const [message, setMessage] = useState("输入文本或链接，再点击“生成二维码”。");
   const [isGenerating, setIsGenerating] = useState(false);
+  const historyRef = useRef<QrHistoryEntry[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        const savedHistory = parseQrHistory(window.localStorage.getItem(QR_HISTORY_KEY));
+        historyRef.current = savedHistory;
+        setHistory(savedHistory);
+      } catch {
+        // localStorage may be disabled; current-session generation still works.
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function replaceHistory(nextHistory: QrHistoryEntry[]) {
+    historyRef.current = nextHistory;
+    setHistory(nextHistory);
+    try {
+      if (nextHistory.length > 0) {
+        window.localStorage.setItem(QR_HISTORY_KEY, JSON.stringify(nextHistory));
+      } else {
+        window.localStorage.removeItem(QR_HISTORY_KEY);
+      }
+    } catch {
+      // Keep the in-memory result available when browser storage is unavailable.
+    }
+  }
 
   async function generateCode() {
     const trimmedContent = content.trim();
@@ -25,6 +60,7 @@ export function QrCodeWorkbench() {
     try {
       const nextDataUrl = await QRCode.toDataURL(trimmedContent, { errorCorrectionLevel: "M", margin: 2, width: size });
       setDataUrl(nextDataUrl);
+      replaceHistory([{ content: trimmedContent, dataUrl: nextDataUrl, createdAt: Date.now() }, ...historyRef.current].slice(0, QR_HISTORY_LIMIT));
       setMessage("二维码已在浏览器本地生成，可直接下载 PNG。\n");
     } catch {
       setDataUrl("");
@@ -68,6 +104,38 @@ export function QrCodeWorkbench() {
             {isGenerating ? "正在生成" : "下载二维码"}
           </a>
         </div>
+      </div>
+
+      <div className="mt-7 border-t border-slate-100 pt-7">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-semibold tracking-tight text-slate-950">最近生成</h3>
+            <p className="mt-1 text-sm text-slate-600">记录仅保存在当前浏览器，最多 {QR_HISTORY_LIMIT} 条。</p>
+          </div>
+          {history.length > 0 && (
+            <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm font-medium text-slate-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-700" onClick={() => { replaceHistory([]); setMessage("生成记录已清空，当前二维码仍可下载。\n"); }} type="button">
+              <Trash2 aria-hidden="true" className="size-4" /> 清空记录
+            </button>
+          )}
+        </div>
+
+        {history.length > 0 ? (
+          <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {history.map((entry, index) => (
+              <li className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3" key={`${entry.createdAt}-${index}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt={`历史二维码 ${index + 1}`} className="aspect-square w-full rounded-xl bg-white object-contain p-1" src={entry.dataUrl} />
+                <p className="mt-2 truncate text-xs font-medium text-slate-700" title={entry.content}>{entry.content}</p>
+                <p className="mt-1 text-xs text-slate-500">{new Date(entry.createdAt).toLocaleString("zh-CN")}</p>
+                <a className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-3 py-3 text-xs font-semibold text-white transition hover:bg-emerald-700" download={`qrcode-${entry.createdAt}.png`} href={entry.dataUrl}>
+                  <Download aria-hidden="true" className="size-4" /> 下载
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="mt-5 rounded-2xl bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">生成二维码后会在这里保留记录。</div>
+        )}
       </div>
       <p aria-live="polite" className="mt-5 rounded-2xl bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-950">{message}</p>
     </section>

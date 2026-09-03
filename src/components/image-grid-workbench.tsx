@@ -41,7 +41,7 @@ export function ImageGridWorkbench() {
 
       setFileName(selectedFile.name.replace(/\.[^.]+$/, "") || "image");
       setSlices(previews);
-      setMessage(`已切成九张 ${Math.round(sliceRects[0].width)}×${Math.round(sliceRects[0].height)} 的图片，点击图片下方按钮逐张下载。`);
+      setMessage(`已切成九张 ${Math.round(sliceRects[0].width)}×${Math.round(sliceRects[0].height)} 的图片。可一键下载全部，手机端也可按编号逐张下载。`);
     } catch {
       setSlices([]);
       setMessage("无法读取这张图片，请换一个文件试试。\n");
@@ -75,7 +75,7 @@ export function ImageGridWorkbench() {
           </div>
         </div>
         {slices.length > 0 && (
-          <button className="w-fit rounded-full bg-emerald-700 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-800" onClick={downloadAll} type="button">一键下载全部</button>
+          <button className="min-h-11 w-fit rounded-full bg-emerald-700 px-4 py-2 text-xs font-semibold text-white transition hover:bg-emerald-800" onClick={downloadAll} type="button">一键下载全部</button>
         )}
       </div>
 
@@ -86,7 +86,7 @@ export function ImageGridWorkbench() {
         </label>
 
         {slices.length > 0 && (
-          <div className="mx-auto grid max-w-md grid-cols-3 overflow-hidden rounded-2xl border border-slate-200">
+          <div className="mx-auto grid max-w-md grid-cols-3 gap-2 overflow-hidden rounded-2xl border border-slate-200 bg-slate-300 p-2">
             {slices.map((slice) => (
               <div key={`${slice.row}-${slice.column}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -99,7 +99,7 @@ export function ImageGridWorkbench() {
         {slices.length > 0 && (
           <div className="grid grid-cols-3 gap-2 sm:hidden">
             {slices.map((slice) => (
-              <button className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-100 px-2 py-2 text-xs font-medium text-slate-700" key={`dl-${slice.row}-${slice.column}`} onClick={() => downloadSlice(slice)} type="button"><Download aria-hidden="true" className="size-3.5" />{slice.row * 3 + slice.column + 1}</button>
+              <button className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-slate-100 px-2 py-2 text-xs font-medium text-slate-700" key={`dl-${slice.row}-${slice.column}`} onClick={() => downloadSlice(slice)} type="button"><Download aria-hidden="true" className="size-3.5" />{slice.row * 3 + slice.column + 1}</button>
             ))}
           </div>
         )}

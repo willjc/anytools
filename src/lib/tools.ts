@@ -90,20 +90,6 @@ export const tools: readonly ToolDefinition[] = [
     accepts: [".pdf"],
   },
   {
-    slug: "pdf-to-image",
-    category: "pdf",
-    name: "PDF 转图片",
-    shortName: "PDF 转图片",
-    description: "把 PDF 页面导出为清晰的图片文件。",
-    longDescription:
-      "将 PDF 的指定页面渲染成图片并下载，适合分享、预览或嵌入文档。处理将在浏览器本地完成。",
-    keywords: ["PDF 转图片", "PDF 转 JPG", "PDF 转 PNG", "PDF 页面转图片"],
-    icon: "image",
-    processing: "browser",
-    availability: "comingSoon",
-    accepts: [".pdf"],
-  },
-  {
     slug: "pdf-merge",
     category: "pdf",
     name: "PDF 合并",
@@ -298,20 +284,6 @@ export const tools: readonly ToolDefinition[] = [
     processing: "cloud",
     availability: "ready",
     accepts: [".heic", ".heif"],
-  },
-  {
-    slug: "image-cutout",
-    category: "image",
-    name: "AI 抠图换底色",
-    shortName: "AI 抠图",
-    description: "一键抠出人像，替换证件照底色。",
-    longDescription:
-      "上传照片自动识别人像边缘，一键生成透明背景 PNG，或替换为白底、蓝底、红底的证件照。该功能由服务器端的 AI 模型完成。",
-    keywords: ["AI 抠图", "证件照换底色", "一键抠图", "透明背景"],
-    icon: "eraser",
-    processing: "cloud",
-    availability: "comingSoon",
-    accepts: [".jpg", ".jpeg", ".png"],
   },
   {
     slug: "qr-code",
