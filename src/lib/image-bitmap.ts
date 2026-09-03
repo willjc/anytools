@@ -12,6 +12,7 @@ export function loadImageFromFile(file: File): Promise<LoadedImage> {
       resolve({ element, width: element.naturalWidth, height: element.naturalHeight });
     };
     element.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
       reject(new Error("无法解码这张图片。"));
     };
     element.src = objectUrl;

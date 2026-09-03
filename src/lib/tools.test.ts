@@ -5,6 +5,7 @@ import { getToolBySlug, getToolsForCategory, toolCategories, tools } from "@/lib
 describe("tool registry", () => {
   it("uses unique stable slugs", () => {
     const slugs = tools.map((tool) => tool.slug);
+    expect(tools).toHaveLength(33);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
@@ -19,6 +20,8 @@ describe("tool registry", () => {
       "image-stitch",
       "image-grid",
       "heic-to-jpg",
+      "image-resize",
+      "image-redact",
     ]);
   });
 

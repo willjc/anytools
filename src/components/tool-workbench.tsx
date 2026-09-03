@@ -2,7 +2,10 @@ import { ImageCropWorkbench } from "@/components/image-crop-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
+import { ImageRedactWorkbench } from "@/components/image-redact-workbench";
+import { ImageResizeWorkbench } from "@/components/image-resize-workbench";
 import { ImageStitchWorkbench } from "@/components/image-stitch-workbench";
+import { ImageToPdfWorkbench } from "@/components/image-to-pdf-workbench";
 import { IpLookupWorkbench } from "@/components/ip-lookup-workbench";
 import { ImageWatermarkWorkbench } from "@/components/image-watermark-workbench";
 import { ImageWorkbench } from "@/components/image-workbench";
@@ -15,15 +18,19 @@ import { PdfEditTextWorkbench } from "@/components/pdf-edit-text-workbench";
 import { PdfMergeWorkbench } from "@/components/pdf-merge-workbench";
 import { PdfOrganizeWorkbench } from "@/components/pdf-organize-workbench";
 import { PdfPageNumbersWorkbench } from "@/components/pdf-page-numbers-workbench";
+import { PdfSignatureWorkbench } from "@/components/pdf-signature-workbench";
 import { PdfSplitWorkbench } from "@/components/pdf-split-workbench";
+import { PdfToImageWorkbench } from "@/components/pdf-to-image-workbench";
 import { PdfToWordWorkbench } from "@/components/pdf-to-word-workbench";
 import { PdfWatermarkWorkbench } from "@/components/pdf-watermark-workbench";
 import { QrCodeWorkbench } from "@/components/qr-code-workbench";
 import { RmbUppercaseWorkbench } from "@/components/rmb-uppercase-workbench";
 import { ToolWorkbenchPlaceholder } from "@/components/tool-workbench-placeholder";
+import { TextCleanerWorkbench } from "@/components/text-cleaner-workbench";
 import { UnitConversionWorkbench } from "@/components/unit-conversion-workbench";
 import { VideoCompressWorkbench } from "@/components/video-compress-workbench";
 import { VideoToAudioWorkbench } from "@/components/video-to-audio-workbench";
+import { WordToPdfWorkbench } from "@/components/word-to-pdf-workbench";
 import type { ToolDefinition } from "@/lib/tools";
 
 export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
@@ -48,6 +55,14 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <PdfToWordWorkbench />;
     case "pdf-compress":
       return <PdfCompressWorkbench />;
+    case "pdf-to-image":
+      return <PdfToImageWorkbench />;
+    case "image-to-pdf":
+      return <ImageToPdfWorkbench />;
+    case "word-to-pdf":
+      return <WordToPdfWorkbench />;
+    case "pdf-signature":
+      return <PdfSignatureWorkbench />;
     case "image-compress":
       return <ImageWorkbench mode="compress" />;
     case "image-convert":
@@ -68,12 +83,18 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <ImageStitchWorkbench />;
     case "image-grid":
       return <ImageGridWorkbench />;
+    case "image-resize":
+      return <ImageResizeWorkbench />;
+    case "image-redact":
+      return <ImageRedactWorkbench />;
     case "qr-code":
       return <QrCodeWorkbench />;
     case "markdown-export":
       return <MarkdownExportWorkbench />;
     case "document-to-markdown":
       return <DocumentToMarkdownWorkbench />;
+    case "text-cleaner":
+      return <TextCleanerWorkbench />;
     case "unit-conversion":
       return <UnitConversionWorkbench />;
     case "date-calculator":
