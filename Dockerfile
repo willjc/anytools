@@ -31,13 +31,19 @@ RUN groupadd --system --gid 1001 nodejs \
 RUN set -eux; \
   find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
   && apt-get update \
-  && apt-get install -y --no-install-recommends qpdf ffmpeg libheif-examples unzip \
+  && apt-get install -y --no-install-recommends qpdf ffmpeg libheif-examples \
   && rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
   find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
   && apt-get update \
   && apt-get install -y --no-install-recommends libreoffice-writer libreoffice-draw fonts-noto-cjk \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
+  find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends unzip \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
