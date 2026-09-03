@@ -60,6 +60,7 @@ export function pickFile(
 const MIME_BY_EXTENSION: Record<string, string> = {
   pdf: "application/pdf",
   docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  md: "text/markdown; charset=utf-8",
   mp4: "video/mp4",
   mp3: "audio/mpeg",
   m4a: "audio/mp4",

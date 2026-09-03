@@ -1,6 +1,7 @@
 import { execFile } from "node:child_process";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 
 import { requireBinary, withTempDir } from "@/lib/server/tool-runtime";
@@ -55,5 +56,41 @@ export async function convertPdfToDocx(inputBytes: Uint8Array): Promise<Uint8Arr
       throw new Error(`转换未产出文档（目录：${listing}）。LibreOffice 输出：${output || "(无)"}`);
     }
     return new Uint8Array(await readFile(join(outDir, produced)));
+  });
+}
+
+export async function convertHtmlDocument(
+  html: string,
+  format: "docx" | "pdf",
+): Promise<Uint8Array> {
+  await requireBinary("soffice", "安装 LibreOffice 后该功能可用。");
+  return withTempDir("alltools-markdown-", async (dir) => {
+    const input = join(dir, "input.html");
+    const outDir = join(dir, "out");
+    const profile = join(dir, "profile");
+    await Promise.all([writeFile(input, html, "utf8"), mkdir(outDir), mkdir(profile)]);
+
+    const filter = format === "docx" ? "docx:Office Open XML Text" : "pdf:writer_pdf_Export";
+    try {
+      await run("soffice", [
+        `-env:UserInstallation=${pathToFileURL(profile).href}`,
+        "--headless",
+        "--norestore",
+        "--convert-to", filter,
+        "--outdir", outDir,
+        input,
+      ], { env: { ...process.env, HOME: dir, XDG_CACHE_HOME: join(dir, ".cache") } });
+    } catch (error) {
+      const captured = error as { stderr?: string; stdout?: string };
+      const tail = [captured.stderr, captured.stdout].filter(Boolean).join("\n").trim().slice(-400);
+      throw new Error(tail ? `LibreOffice 转换出错：${tail}` : "LibreOffice 转换进程异常退出。");
+    }
+
+    const output = join(outDir, `input.${format}`);
+    try {
+      return new Uint8Array(await readFile(output));
+    } catch {
+      throw new Error("LibreOffice 未生成转换后的文件。");
+    }
   });
 }

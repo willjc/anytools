@@ -7,6 +7,8 @@ import { IpLookupWorkbench } from "@/components/ip-lookup-workbench";
 import { ImageWatermarkWorkbench } from "@/components/image-watermark-workbench";
 import { ImageWorkbench } from "@/components/image-workbench";
 import { DateCalculatorWorkbench } from "@/components/date-calculator-workbench";
+import { DocumentToMarkdownWorkbench } from "@/components/document-to-markdown-workbench";
+import { MarkdownExportWorkbench } from "@/components/markdown-export-workbench";
 import { MortgageWorkbench } from "@/components/mortgage-workbench";
 import { PdfCompressWorkbench } from "@/components/pdf-compress-workbench";
 import { PdfEditTextWorkbench } from "@/components/pdf-edit-text-workbench";
@@ -68,6 +70,10 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <ImageGridWorkbench />;
     case "qr-code":
       return <QrCodeWorkbench />;
+    case "markdown-export":
+      return <MarkdownExportWorkbench />;
+    case "document-to-markdown":
+      return <DocumentToMarkdownWorkbench />;
     case "unit-conversion":
       return <UnitConversionWorkbench />;
     case "date-calculator":
