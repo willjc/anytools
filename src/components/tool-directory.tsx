@@ -234,7 +234,7 @@ export function ToolDirectory() {
                             </span>
                             <span className="hidden text-sm text-slate-500 sm:block">{tool.description}</span>
                             <span className={`w-fit rounded-md px-2 py-1 text-xs font-medium ${tool.processing === "cloud" ? "bg-sky-50 text-sky-700" : "bg-emerald-50 text-emerald-700"}`}>
-                              {tool.processing === "cloud" ? "云端处理" : "本地处理"}
+                              {tool.cardTag ?? (tool.processing === "cloud" ? "云端处理" : "本地处理")}
                             </span>
                             <ChevronRight aria-hidden="true" className="hidden size-4 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700 sm:block" />
                           </Link>

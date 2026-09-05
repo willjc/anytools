@@ -18,6 +18,7 @@ import {
   Minimize2,
   Music,
   PenLine,
+  Presentation,
   QrCode,
   Ruler,
   Stamp,
@@ -51,6 +52,7 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   banknote: Banknote,
   home: Home,
   globe: Globe,
+  presentation: Presentation,
 };
 
 export function ToolIcon({

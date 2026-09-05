@@ -1,4 +1,5 @@
 import { ImageCropWorkbench } from "@/components/image-crop-workbench";
+import { AiPptWorkbench } from "@/components/ai-ppt-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -39,6 +40,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
   }
 
   switch (tool.slug) {
+    case "ai-ppt":
+      return <AiPptWorkbench />;
     case "pdf-split":
       return <PdfSplitWorkbench />;
     case "pdf-merge":

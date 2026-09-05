@@ -64,10 +64,13 @@ export type ToolDefinition = {
     | "calendar"
     | "banknote"
     | "home"
-    | "globe";
+    | "globe"
+    | "presentation";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
+  /** 覆盖详情页头部的处理方式标签 */
+  headerTag?: string;
   /** 覆盖卡片底部默认的处理方式标签 */
   cardTag?: string;
   /** 覆盖详情页「如何使用」的默认三步 */
@@ -75,6 +78,27 @@ export type ToolDefinition = {
 };
 
 export const tools: readonly ToolDefinition[] = [
+  {
+    slug: "ai-ppt",
+    category: "create",
+    name: "AI PPT 生成器",
+    shortName: "AI 做 PPT",
+    description: "输入主题或大纲，AI 逐页生成可下载编辑的 PPT。",
+    longDescription:
+      "输入一个主题或粘贴大纲、会议纪要等素材，选择目标页数与受众，AI 会逐页撰写标题、要点与演讲备注，右侧实时预览，满意后直接下载可在 PowerPoint / WPS 中继续编辑的 PPTX 文件。内容由 DeepSeek 在云端生成，请核实数据与结论。",
+    keywords: ["AI PPT", "PPT 生成", "AI 生成 PPT", "一键生成 PPT", "PPT 大纲", "AI 做幻灯片"],
+    icon: "presentation",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["主题", "文本", ".txt", ".md"],
+    headerTag: "AI 云端生成 · 内容将发送至 DeepSeek",
+    cardTag: "AI 云端生成",
+    usageSteps: [
+      "输入主题或粘贴大纲素材，选择目标页数与受众",
+      "点击生成，AI 逐页撰写，右侧实时预览",
+      "满意后下载 PPTX 文件，可在 Office / WPS 中继续编辑",
+    ],
+  },
   {
     slug: "pdf-split",
     category: "pdf",

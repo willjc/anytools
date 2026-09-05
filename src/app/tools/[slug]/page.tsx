@@ -85,7 +85,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
               <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">{tool.longDescription}</p>
             </div>
             <span className={`w-fit rounded-lg px-3 py-2 text-xs font-medium ${tool.processing === "cloud" ? "bg-sky-50 text-sky-700" : "bg-emerald-50 text-emerald-700"}`}>
-              {tool.processing === "cloud" ? "云端处理 · 即时删除" : "浏览器本地处理"}
+              {tool.headerTag ?? (tool.processing === "cloud" ? "云端处理 · 即时删除" : "浏览器本地处理")}
             </span>
           </div>
         </div>

@@ -13,6 +13,8 @@ services:
       HOSTNAME: 0.0.0.0
       PORT: "3000"
       MINERU_API_TOKEN: ${MINERU_API_TOKEN:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      ALLTOOLS_AI_DAILY_LIMIT: ${ALLTOOLS_AI_DAILY_LIMIT:-}
     read_only: true
     tmpfs:
       - /tmp
