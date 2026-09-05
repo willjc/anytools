@@ -2,6 +2,21 @@
 
 一个在线工具站。多数工具在浏览器本地完成处理，文件不离开设备；标注「云端处理」的功能由服务器即时处理后即删。
 
+「随手传」是云端保存工具，规则不同：文字和文件默认保存 3 年，用户可提前删除。当前注册表共 39 个工具，以 `src/lib/tools.ts` 为准。
+
+## 随手传
+
+入口 `/tools/transfer`。用户名和密码登录，跨设备保存文字、任意格式文件；单文件最大 1 GiB（页面显示 1 GB），无账号总容量配额。使用 8 MiB 分块和 SHA-256 完整校验，重新选择同一内容文件可续传；未完成上传保留 7 天。分享默认 7 天，可选 1/7/30/365 天和提取码，撤销或重新生成后旧链接立即失效。
+
+- Node 24 内置 SQLite 保存账号、会话和记录；密码用随机盐 scrypt，Cookie 为 HttpOnly。`@noble/hashes` 用于 HTTP 浏览器环境下的增量文件校验。
+- 数据在 Compose 命名卷 `alltools_transfer_data`，挂载 `/data/transfer`，与不可变发布目录独立。不要执行 `docker compose down --volumes`。
+- 非 Docker 开发默认存 `.transfer-data`，可用 `TRANSFER_DATA_DIR` 指定。数据目录已排除 Git、Docker 构建和发布上传。
+- `transfer-maintenance` 每小时清理到期内容和临时上传、每日生成备份，保留近 7 天快照。数据库使用 SQLite backup API，已完成文件用硬链接备份；文件完成后不再修改。只有存在 `complete.json` 的快照可用于恢复。
+- 备份位于同一数据卷的 `backups/YYYY-MM-DD`，支持误删除恢复，但不防整机/硬盘损坏；异机备份需要另行提供备份目的地。删除的内容可能在近期备份中最多保留 7 天。
+- 恢复时先停止 app 和 maintenance，对现有卷另作备份，将选定快照的 `transfer.sqlite` 和 `files/` 复制至一个新的独立卷（不要把数据库硬链接回运行目录），验证 `PRAGMA integrity_check` 后切换卷并启动。恢复不保留登录会话，用户重新登录。
+- 可手动执行 `docker exec alltools-transfer-maintenance-1 node scripts/transfer-maintenance.mjs --once`，检查备份完成记录与容器日志。无每日完成记录说明备份未成功，不能据此承诺可恢复。
+- 剩余空间低于 5 GiB 时拒绝新建内容；预留未完成上传的空间。现有 HTTP/IP 入口仍使用未加密传输，页面明确提示；并未配置或宣称 HTTPS。
+
 已开放 33 个工具：PDF 拆分 / 合并 / 页面整理 / 加水印 / 加页码 / 改字 / 压缩（云端）/ 转 Word（云端）/ 转图片 / 图片转 PDF / Word 转 PDF（云端）/ 签名盖章，图片压缩 / 格式转换 / 裁剪 / 加水印 / 拼接 / 九宫格切图 / HEIC 转 JPG（云端）/ 改尺寸 / 隐私遮挡，二维码生成 / 文本整理与字数统计 / Markdown 导出 / 文档转 Markdown（云端），视频压缩 / 视频提取音频 / 音频格式转换（均云端），IP 查询（访客 IP 与域名解析，云端），以及单位换算 / 日期计算 / 人民币大写 / 房贷计算器四个生活工具。
 
 ## 本地开发

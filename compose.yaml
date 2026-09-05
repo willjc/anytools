@@ -12,10 +12,13 @@ services:
       NODE_ENV: production
       HOSTNAME: 0.0.0.0
       PORT: "3000"
+      TRANSFER_DATA_DIR: /data/transfer
       MINERU_API_TOKEN: ${MINERU_API_TOKEN:-}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
       ALLTOOLS_AI_DAILY_LIMIT: ${ALLTOOLS_AI_DAILY_LIMIT:-}
     read_only: true
+    volumes:
+      - transfer_data:/data/transfer
     tmpfs:
       - /tmp
     security_opt:
@@ -27,11 +30,29 @@ services:
         - CMD
         - node
         - -e
-        - "fetch('http://127.0.0.1:3000/').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+        - "Promise.all(['/', '/api/transfer/session'].map(p => fetch('http://127.0.0.1:3000'+p))).then(rs => process.exit(rs.every(r => r.ok) ? 0 : 1)).catch(() => process.exit(1))"
       interval: 15s
       timeout: 5s
       retries: 5
       start_period: 20s
+
+  transfer-maintenance:
+    image: alltools:${RELEASE_ID:-local}
+    init: true
+    restart: unless-stopped
+    command: ["node", "scripts/transfer-maintenance.mjs"]
+    environment:
+      TRANSFER_DATA_DIR: /data/transfer
+    depends_on:
+      app:
+        condition: service_healthy
+    volumes:
+      - transfer_data:/data/transfer
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
 
   gateway:
     image: caddy:2.10.2-alpine
@@ -69,3 +90,6 @@ networks:
   chaxun_shared:
     external: true
     name: chaxun_shared
+
+volumes:
+  transfer_data:

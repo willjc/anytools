@@ -82,6 +82,22 @@ export type ToolDefinition = {
 
 export const tools: readonly ToolDefinition[] = [
   {
+    slug: "transfer",
+    category: "network",
+    name: "随手传",
+    shortName: "随手传",
+    description: "跨设备保存文字和文件，一键分享给别人。",
+    longDescription: "登录同一个账号，在不同电脑或手机间取用文字与文件。支持单文件 1 GB、断点续传、保存 3 年，也能生成无需注册的分享链接。",
+    keywords: ["随手传", "跨设备传文件", "文字传输", "文件分享", "断点续传"],
+    icon: "globe",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["任意文件", "文字"],
+    headerTag: "云端保存 · 3 年有效",
+    cardTag: "云端保存",
+    usageSteps: ["创建账号，保存文字或上传文件", "其他设备登录同一账号，复制或下载", "生成分享链接，别人无需注册即可取用"],
+  },
+  {
     slug: "ai-ppt",
     category: "create",
     name: "AI PPT 生成器",

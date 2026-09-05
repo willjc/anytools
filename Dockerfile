@@ -49,6 +49,8 @@ RUN set -eux; \
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --chown=nextjs:nodejs scripts/transfer-maintenance.mjs ./scripts/transfer-maintenance.mjs
+RUN mkdir -p /data/transfer && chown nextjs:nodejs /data/transfer && chmod 700 /data/transfer
 
 USER nextjs
 EXPOSE 3000

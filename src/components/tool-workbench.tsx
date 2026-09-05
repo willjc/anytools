@@ -1,4 +1,5 @@
 import { ImageCropWorkbench } from "@/components/image-crop-workbench";
+import { TransferWorkbench } from "@/components/transfer-workbench";
 import { AiPptWorkbench } from "@/components/ai-ppt-workbench";
 import { GifWorkbench } from "@/components/gif-workbench";
 import { ImageToTextWorkbench } from "@/components/image-to-text-workbench";
@@ -43,6 +44,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
   }
 
   switch (tool.slug) {
+    case "transfer":
+      return <TransferWorkbench />;
     case "ai-ppt":
       return <AiPptWorkbench />;
     case "pdf-protect":

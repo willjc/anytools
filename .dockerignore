@@ -1,6 +1,7 @@
 .git
 .github
 .learnings
+.transfer-data
 .next
 node_modules
 npm-debug.log*
