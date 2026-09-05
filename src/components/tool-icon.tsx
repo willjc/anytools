@@ -25,6 +25,7 @@ import {
   Ruler,
   ScanText,
   Stamp,
+  TextQuote,
   Video,
   type LucideIcon,
 } from "lucide-react";
@@ -59,6 +60,7 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   lock: Lock,
   scanText: ScanText,
   clapper: Clapperboard,
+  text: TextQuote,
 };
 
 export function ToolIcon({

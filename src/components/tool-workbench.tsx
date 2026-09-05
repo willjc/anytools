@@ -4,6 +4,7 @@ import { AiPptWorkbench } from "@/components/ai-ppt-workbench";
 import { GifWorkbench } from "@/components/gif-workbench";
 import { ImageToTextWorkbench } from "@/components/image-to-text-workbench";
 import { PdfProtectWorkbench } from "@/components/pdf-protect-workbench";
+import { TextImageWorkbench } from "@/components/text-image-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -48,6 +49,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <TransferWorkbench />;
     case "ai-ppt":
       return <AiPptWorkbench />;
+    case "text-to-image":
+      return <TextImageWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
     case "image-to-text":

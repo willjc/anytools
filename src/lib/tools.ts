@@ -68,7 +68,8 @@ export type ToolDefinition = {
     | "presentation"
     | "lock"
     | "scanText"
-    | "clapper";
+    | "clapper"
+    | "text";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -488,6 +489,25 @@ export const tools: readonly ToolDefinition[] = [
     processing: "browser",
     availability: "ready",
     accepts: [".jpg", ".jpeg", ".png", ".webp"],
+  },
+  {
+    slug: "text-to-image",
+    category: "create",
+    name: "文字长图生成器",
+    shortName: "文字长图",
+    description: "把长文字排成精美图片，发微博、朋友圈专用。",
+    longDescription:
+      "粘贴长文字，选择素笺、卡片、竖排、墨色四种版式，搭配思源宋体、毛笔楷书、行书、龙藏手写等开源字体（OFL 协议），可加标题与落款，实时预览后一键下载 PNG 或复制到剪贴板。全部生成在浏览器本地完成，文字不上传。",
+    keywords: ["文字生成图片", "长图制作", "微博长图", "文字转图片", "朋友圈长图", "毛笔字图片"],
+    icon: "text",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["文本"],
+    usageSteps: [
+      "粘贴长文字，可选填标题与落款",
+      "挑选版式、字体与强调色，右侧实时预览",
+      "下载 PNG 长图或直接复制图片发布",
+    ],
   },
   {
     slug: "qr-code",
