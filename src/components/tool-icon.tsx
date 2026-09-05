@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   Banknote,
   CalendarDays,
+  Clapperboard,
   Combine,
   Crop,
   Droplets,
@@ -15,12 +16,14 @@ import {
   Layers,
   LayoutGrid,
   ListOrdered,
+  Lock,
   Minimize2,
   Music,
   PenLine,
   Presentation,
   QrCode,
   Ruler,
+  ScanText,
   Stamp,
   Video,
   type LucideIcon,
@@ -53,6 +56,9 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   home: Home,
   globe: Globe,
   presentation: Presentation,
+  lock: Lock,
+  scanText: ScanText,
+  clapper: Clapperboard,
 };
 
 export function ToolIcon({

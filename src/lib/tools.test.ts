@@ -5,7 +5,7 @@ import { getToolBySlug, getToolsForCategory, toolCategories, tools } from "@/lib
 describe("tool registry", () => {
   it("uses unique stable slugs", () => {
     const slugs = tools.map((tool) => tool.slug);
-    expect(tools).toHaveLength(34);
+    expect(tools).toHaveLength(38);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
@@ -13,6 +13,7 @@ describe("tool registry", () => {
     expect(getToolBySlug("pdf-split")?.name).toBe("PDF 拆分");
     expect(getToolBySlug("missing-tool")).toBeUndefined();
     expect(getToolsForCategory("image").map((tool) => tool.slug)).toEqual([
+      "image-to-text",
       "image-compress",
       "image-convert",
       "image-crop",

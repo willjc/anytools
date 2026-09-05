@@ -65,7 +65,10 @@ export type ToolDefinition = {
     | "banknote"
     | "home"
     | "globe"
-    | "presentation";
+    | "presentation"
+    | "lock"
+    | "scanText"
+    | "clapper";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -97,6 +100,83 @@ export const tools: readonly ToolDefinition[] = [
       "输入主题或粘贴大纲素材，选择目标页数与受众",
       "点击生成，AI 逐页撰写，右侧实时预览",
       "满意后下载 PPTX 文件，可在 Office / WPS 中继续编辑",
+    ],
+  },
+  {
+    slug: "pdf-protect",
+    category: "pdf",
+    name: "PDF 加密与解锁",
+    shortName: "PDF 加密解锁",
+    description: "给 PDF 设打开密码与权限，或解除密码限制。",
+    longDescription:
+      "两种模式：给 PDF 加上 256 位 AES 打开密码，并可分别控制是否允许打印、复制、编辑；或解除已有 PDF 的密码与权限限制（仅限制编辑的文件可直接解除，设了打开密码的需输入密码）。文件由服务器端 qpdf 处理，完成后立即删除。请仅处理你有权操作的文件。",
+    keywords: ["PDF 加密", "PDF 解密", "PDF 解除限制", "PDF 设密码", "PDF 去掉密码", "PDF 解锁"],
+    icon: "lock",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".pdf"],
+    usageSteps: [
+      "选择「加密」或「解除限制」模式并选择 PDF 文件",
+      "加密模式设置密码与权限；解锁模式按需输入打开密码",
+      "处理完成后自动下载新文件，服务器不留存任何副本",
+    ],
+  },
+  {
+    slug: "image-to-text",
+    category: "image",
+    name: "图片转文字",
+    shortName: "图片转文字",
+    description: "OCR 识别截图、照片中的文字，可复制下载。",
+    longDescription:
+      "上传图片即可提取其中的文字内容，支持中文与多种语言，识别结果可一键复制或下载为 TXT。识别由 MinerU 云端完成，表格会以文本形式还原。图片处理完成后立即删除。",
+    keywords: ["图片转文字", "OCR 在线识别", "截图识别文字", "照片提取文字", "图片文字提取"],
+    icon: "scanText",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".png", ".jpg", ".jpeg", ".jp2", ".webp", ".gif", ".bmp"],
+    cardTag: "MinerU 云端识别",
+    usageSteps: [
+      "选择 PNG、JPG 等常见图片",
+      "提交 MinerU 云端识别，请保持页面打开",
+      "复制识别结果或下载 TXT 文件",
+    ],
+  },
+  {
+    slug: "video-to-gif",
+    category: "av",
+    name: "视频转 GIF",
+    shortName: "视频转 GIF",
+    description: "截取视频片段转成高清 GIF 动图。",
+    longDescription:
+      "选择视频并设定开始时间、时长、帧率与宽度，由服务器端 ffmpeg 以调色板算法生成画质更好的 GIF 动图，适合聊天分享与社交发布。单次最长 60 秒，文件处理完立即删除。",
+    keywords: ["视频转 GIF", "MP4 转 GIF", "视频截取动图", "GIF 制作", "视频转动图"],
+    icon: "clapper",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".mp4", ".mov", ".mkv", ".avi", ".webm"],
+    usageSteps: [
+      "选择视频文件，设定开始时间与时长（最长 60 秒）",
+      "选择帧率与宽度，帧率越高越流畅、体积越大",
+      "转换完成后自动下载 GIF",
+    ],
+  },
+  {
+    slug: "gif-compress",
+    category: "av",
+    name: "GIF 压缩",
+    shortName: "GIF 压缩",
+    description: "在可接受的画质下把过大的 GIF 变小。",
+    longDescription:
+      "上传过大的 GIF，通过重排调色板、降低帧率与色数来减小体积，提供轻度、中度、强力三档强度，方便聊天软件发送。该功能由服务器端 ffmpeg 完成，处理后立即删除。",
+    keywords: ["GIF 压缩", "GIF 变小", "GIF 减小体积", "GIF 过大", "动图压缩"],
+    icon: "clapper",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".gif"],
+    usageSteps: [
+      "选择需要压缩的 GIF 文件",
+      "选择压缩强度：轻度保画质，强力尽量小",
+      "压缩完成后自动下载",
     ],
   },
   {

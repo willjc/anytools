@@ -1,5 +1,8 @@
 import { ImageCropWorkbench } from "@/components/image-crop-workbench";
 import { AiPptWorkbench } from "@/components/ai-ppt-workbench";
+import { GifWorkbench } from "@/components/gif-workbench";
+import { ImageToTextWorkbench } from "@/components/image-to-text-workbench";
+import { PdfProtectWorkbench } from "@/components/pdf-protect-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -42,6 +45,14 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
   switch (tool.slug) {
     case "ai-ppt":
       return <AiPptWorkbench />;
+    case "pdf-protect":
+      return <PdfProtectWorkbench />;
+    case "image-to-text":
+      return <ImageToTextWorkbench />;
+    case "video-to-gif":
+      return <GifWorkbench mode="convert" />;
+    case "gif-compress":
+      return <GifWorkbench mode="compress" />;
     case "pdf-split":
       return <PdfSplitWorkbench />;
     case "pdf-merge":

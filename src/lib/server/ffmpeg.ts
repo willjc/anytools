@@ -6,9 +6,13 @@ import { promisify } from "node:util";
 import {
   buildAudioConvertArgs,
   buildExtractAudioArgs,
+  buildGifCompressArgs,
   buildVideoCompressArgs,
+  buildVideoToGifArgs,
   type AudioFormat,
+  type GifCompressLevel,
   type VideoHeight,
+  type VideoToGifOptions,
 } from "@/lib/media-options";
 import { requireBinary, withTempDir } from "@/lib/server/tool-runtime";
 
@@ -63,5 +67,29 @@ export async function convertAudio(inputBytes: Uint8Array, format: AudioFormat, 
     const { args } = buildAudioConvertArgs({ input, output, format, bitrateKbps });
     await runFfmpeg(args);
     return { bytes: new Uint8Array(await readFile(output)), extension: format };
+  });
+}
+
+export async function convertVideoToGif(inputBytes: Uint8Array, options: VideoToGifOptions): Promise<Uint8Array> {
+  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  return withTempDir("alltools-gif-", async (dir) => {
+    const input = await writeInput(dir, inputBytes);
+    const output = join(dir, "output.gif");
+    await runFfmpeg(buildVideoToGifArgs({ input, output, ...options }));
+    const bytes = new Uint8Array(await readFile(output));
+    if (bytes.length > 30 * 1024 * 1024) {
+      throw new Error("生成的 GIF 超过 30MB，请缩短时长、降低帧率或宽度后重试。");
+    }
+    return bytes;
+  });
+}
+
+export async function compressGif(inputBytes: Uint8Array, level: GifCompressLevel): Promise<Uint8Array> {
+  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  return withTempDir("alltools-gif-", async (dir) => {
+    const input = await writeInput(dir, inputBytes);
+    const output = join(dir, "output.gif");
+    await runFfmpeg(buildGifCompressArgs({ input, output, level }));
+    return new Uint8Array(await readFile(output));
   });
 }
