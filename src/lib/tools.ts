@@ -84,7 +84,8 @@ export type ToolDefinition = {
     | "calculator"
     | "volume"
     | "printer"
-    | "wifi";
+    | "wifi"
+    | "brush";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -983,6 +984,27 @@ export const tools: readonly ToolDefinition[] = [
       "选择辞职信或投诉信，写清事实经过",
       "选择语气与诉求",
       "AI 起草后复制发送，记得核对事实",
+    ],
+  },
+  {
+    slug: "hanzi-stroke",
+    category: "life",
+    name: "汉字笔顺学习",
+    shortName: "笔顺学字",
+    description: "说话查字看笔顺、练描红，AI 讲字义。",
+    longDescription:
+      "碰到不认识的字？按住麦克风说一个词（如“节约的约”），点选要学的字：田字格里逐笔演示笔顺动画，还能用手指跟着描红（写错顺序会提醒）。AI 老师用小学生听得懂的话讲字义、组词、例句和记忆口诀。学过的字自动记在本机。",
+    keywords: ["笔顺", "汉字笔顺", "笔顺动画", "识字", "学写字", "描红", "儿童识字", "字义"],
+    icon: "brush",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["语音", "汉字"],
+    headerTag: "笔顺本地动画 · 字义由 DeepSeek 生成",
+    cardTag: "笔顺动画 · AI 字义",
+    usageSteps: [
+      "按住麦克风说出词语，或直接输入汉字",
+      "点选要学的字，看田字格里的笔顺动画",
+      "切换描红练习跟着写，AI 老师讲字义和口诀",
     ],
   },
   {

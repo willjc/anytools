@@ -1,6 +1,7 @@
 import {
   ArrowLeftRight,
   Banknote,
+  Brush,
   Calculator,
   CalendarDays,
   CalendarHeart,
@@ -91,6 +92,7 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   volume: Volume2,
   printer: Printer,
   wifi: Wifi,
+  brush: Brush,
 };
 
 export function ToolIcon({

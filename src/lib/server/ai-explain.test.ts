@@ -21,7 +21,7 @@ describe("validateExplainRequest", () => {
     expect(validateExplainRequest("payslip", "")).toContain("工资条");
     expect(validateExplainRequest("checkup", "")).toContain("体检");
     expect(validateExplainRequest("medication", "")).toContain("说明书");
-    expect(validateExplainRequest("letter", "")).toContain("事实");
+    expect(validateExplainRequest("letter", "")).toContain("内容");
   });
 
   it("rejects too-short payslip content", () => {
@@ -63,5 +63,23 @@ describe("letter details", () => {
     expect(complaint).toContain("投诉信");
     expect(complaint).toContain("全额退款");
     expect(complaint).toContain("坚决明确");
+  });
+});
+
+describe("hanzi task", () => {
+  it("validates cjk-only short input", () => {
+    expect(validateExplainRequest("hanzi", "约")).toBeNull();
+    expect(validateExplainRequest("hanzi", "节约")).toBeNull();
+    expect(validateExplainRequest("hanzi", "abc")).toContain("1-6 个汉字");
+    expect(validateExplainRequest("hanzi", "")).toContain("汉字");
+  });
+
+  it("explains with word context from extra", () => {
+    const prompt = buildExplainUserPrompt("hanzi", "约", "节约的约");
+    expect(prompt).toContain("「约」");
+    expect(prompt).toContain("节约的约");
+    const system = buildExplainSystemPrompt("hanzi");
+    expect(system).toContain("识字老师");
+    expect(system).toContain("记忆小口诀");
   });
 });

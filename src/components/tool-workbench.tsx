@@ -19,6 +19,7 @@ import { AiExplainWorkbench } from "@/components/ai-explain-workbench";
 import { LetterWorkbench } from "@/components/letter-workbench";
 import { InvoicePrintWorkbench } from "@/components/invoice-print-workbench";
 import { WifiQrcodeWorkbench } from "@/components/wifi-qrcode-workbench";
+import { HanziLearnWorkbench } from "@/components/hanzi-learn-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -95,6 +96,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <InvoicePrintWorkbench />;
     case "wifi-qrcode":
       return <WifiQrcodeWorkbench />;
+    case "hanzi-stroke":
+      return <HanziLearnWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
     case "pdf-to-excel":

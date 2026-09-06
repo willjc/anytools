@@ -3,7 +3,7 @@
  * 四个任务：工资条解读、体检报告解读、药品说明书大白话、信函起草（辞职信/投诉信）。
  */
 
-export const AI_EXPLAIN_TASKS = ["payslip", "checkup", "medication", "letter"] as const;
+export const AI_EXPLAIN_TASKS = ["payslip", "checkup", "medication", "letter", "hanzi"] as const;
 export type AiExplainTask = (typeof AI_EXPLAIN_TASKS)[number];
 
 export const AI_EXPLAIN_LIMITS = {
@@ -34,12 +34,16 @@ export function cleanInput(value: unknown, limit: number = AI_EXPLAIN_LIMITS.max
 
 export function validateExplainRequest(task: AiExplainTask, input: string): string | null {
   if (!input) {
-    const emptyMessages: Record<Exclude<AiExplainTask, "letter">, string> = {
+    const emptyMessages: Partial<Record<AiExplainTask, string>> = {
       payslip: "请先粘贴工资条内容。",
       checkup: "请先粘贴体检报告指标。",
       medication: "请先粘贴药品说明书内容。",
+      hanzi: "请提供要学习的汉字。",
     };
-    return task === "letter" ? "请填写事实经过。" : emptyMessages[task];
+    return emptyMessages[task] ?? "请先粘贴内容。";
+  }
+  if (task === "hanzi" && !/^[\u3400-\u4dbf\u4e00-\u9fff]{1,6}$/.test(input)) {
+    return "请提供 1-6 个汉字（可以是一个字或一个词）。";
   }
   if (task === "payslip" && input.length < 20) return "工资条内容太短，请粘贴完整条目（如：基本工资 8000、社保 -800…）。";
   if (task === "checkup" && input.length < 10) return "请粘贴体检报告中的指标内容。";
@@ -69,6 +73,12 @@ export function buildExplainSystemPrompt(task: AiExplainTask): string {
       ].join("\n");
     case "letter":
       return "你是职场文书助手，根据用户提供的事实起草书信。输出正文即可（可含标题与落款占位），不要输出解释或 Markdown 代码块。";
+    case "hanzi":
+      return [
+        "你是小学语文识字老师，面向 6-12 岁的小学生讲解汉字。",
+        "输出 Markdown，固定小节：① 这个字是什么意思（先用一句大白话概括，再展开 1-2 句）；② 常用组词（3-4 个，标拼音）；③ 例句（2 个，贴近小学生生活）；④ 记忆小口诀（编一个好记的顺口溜或字形联想）；⑤ 容易写错、认错的提醒。",
+        "规则：句子短、语气亲切活泼、多用孩子熟悉的例子；多音字要说明不同读音的用法；结尾加一句鼓励的话。"
+      ].join("\n");
   }
 }
 
@@ -81,6 +91,8 @@ export function buildExplainUserPrompt(task: AiExplainTask, input: string, extra
       return `请解读以下体检报告指标：\n\n${input}${extraLine}`;
     case "medication":
       return `请把以下药品说明书转成大白话：\n\n${input}${extraLine}`;
+    case "hanzi":
+      return `请讲解汉字「${input}」。${extra ? `它出现在词语或句子「${extra}」中，请结合这个语境讲解。` : ""}`;
     case "letter":
       return input;
   }

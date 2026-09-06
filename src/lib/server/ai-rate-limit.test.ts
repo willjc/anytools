@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { consumeAiCredit, AiRateLimitError, aiDailyLimit, clientIpOf } from "@/lib/server/ai-rate-limit";
+import { consumeAiCredit, AiRateLimitError, aiDailyLimit, cheapAiDailyLimit, clientIpOf } from "@/lib/server/ai-rate-limit";
 
 const originalLimit = process.env.ALLTOOLS_AI_DAILY_LIMIT;
 
@@ -36,5 +36,18 @@ describe("ai rate limit", () => {
     });
     expect(clientIpOf(request)).toBe("203.0.113.5");
     expect(clientIpOf(new Request("https://example.com/api"))).toBe("unknown");
+  });
+});
+
+describe("cheapAiDailyLimit", () => {
+  it("defaults to 100 and consumes against a per-call limit", () => {
+    delete process.env.ALLTOOLS_CHEAP_AI_DAILY_LIMIT;
+    expect(cheapAiDailyLimit()).toBe(100);
+
+    process.env.ALLTOOLS_AI_DAILY_LIMIT = "2";
+    const ip = "198.51.100.77";
+    consumeAiCredit(ip, cheapAiDailyLimit());
+    consumeAiCredit(ip, cheapAiDailyLimit());
+    expect(() => consumeAiCredit(ip, 2)).toThrowError(AiRateLimitError);
   });
 });

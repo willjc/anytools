@@ -10,7 +10,7 @@ import {
   validateExplainRequest,
   type AiExplainTask,
 } from "@/lib/server/ai-explain";
-import { consumeAiCredit, AiRateLimitError, clientIpOf } from "@/lib/server/ai-rate-limit";
+import { aiDailyLimit, consumeAiCredit, AiRateLimitError, cheapAiDailyLimit, clientIpOf } from "@/lib/server/ai-rate-limit";
 import { DeepSeekConfigurationError, DeepSeekUpstreamError, streamChatCompletion } from "@/lib/server/deepseek";
 
 export const runtime = "nodejs";
@@ -32,17 +32,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "请求格式不正确。" }, { status: 400 });
   }
 
+  const rawTask = body.task;
+  const task: AiExplainTask = AI_EXPLAIN_TASKS.find((item) => item === rawTask) ?? "payslip";
+
   try {
-    consumeAiCredit(clientIpOf(request));
+    // 儿童识字这类轻量查询给更高的独立额度，避免学习中途被限流
+    consumeAiCredit(clientIpOf(request), task === "hanzi" ? cheapAiDailyLimit() : aiDailyLimit());
   } catch (error) {
     if (error instanceof AiRateLimitError) {
       return NextResponse.json({ error: error.message }, { status: 429 });
     }
     throw error;
   }
-
-  const rawTask = body.task;
-  const task: AiExplainTask = AI_EXPLAIN_TASKS.find((item) => item === rawTask) ?? "payslip";
 
   let systemPrompt: string;
   let userPrompt: string;

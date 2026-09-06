@@ -23,14 +23,19 @@ export function aiDailyLimit(): number {
   return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 20;
 }
 
+/** 轻量任务（如儿童识字查询）单独的每日额度，默认 100 次。 */
+export function cheapAiDailyLimit(): number {
+  const parsed = Number(process.env.ALLTOOLS_CHEAP_AI_DAILY_LIMIT);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 100;
+}
+
 function todayStamp(now = new Date()): string {
   return now.toISOString().slice(0, 10);
 }
 
 /** 消耗一次额度；超过当日限额时抛出 AiRateLimitError。 */
-export function consumeAiCredit(ip: string): void {
+export function consumeAiCredit(ip: string, limit: number = aiDailyLimit()): void {
   const day = todayStamp();
-  const limit = aiDailyLimit();
 
   if (usage.size > 5000) {
     for (const [key, entry] of usage) {
