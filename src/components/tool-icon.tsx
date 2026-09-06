@@ -19,6 +19,7 @@ import {
   Lock,
   Minimize2,
   Music,
+  PartyPopper,
   PenLine,
   Presentation,
   QrCode,
@@ -26,6 +27,7 @@ import {
   ScanText,
   Stamp,
   TextQuote,
+  Users,
   Video,
   type LucideIcon,
 } from "lucide-react";
@@ -61,6 +63,8 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   scanText: ScanText,
   clapper: Clapperboard,
   text: TextQuote,
+  party: PartyPopper,
+  users: Users,
 };
 
 export function ToolIcon({

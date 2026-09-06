@@ -5,6 +5,8 @@ import { GifWorkbench } from "@/components/gif-workbench";
 import { ImageToTextWorkbench } from "@/components/image-to-text-workbench";
 import { PdfProtectWorkbench } from "@/components/pdf-protect-workbench";
 import { TextImageWorkbench } from "@/components/text-image-workbench";
+import { KinshipWorkbench } from "@/components/kinship-workbench";
+import { LotteryWorkbench } from "@/components/lottery-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -51,6 +53,10 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <AiPptWorkbench />;
     case "text-to-image":
       return <TextImageWorkbench />;
+    case "lottery":
+      return <LotteryWorkbench />;
+    case "kinship":
+      return <KinshipWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
     case "image-to-text":

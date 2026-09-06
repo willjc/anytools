@@ -69,7 +69,9 @@ export type ToolDefinition = {
     | "lock"
     | "scanText"
     | "clapper"
-    | "text";
+    | "text"
+    | "party"
+    | "users";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -654,6 +656,45 @@ export const tools: readonly ToolDefinition[] = [
     processing: "browser",
     availability: "ready",
     accepts: ["数值"],
+  },
+  {
+    slug: "lottery",
+    category: "life",
+    name: "抽奖 / 随机点名",
+    shortName: "抽奖点名",
+    description: "粘贴名单滚动抽奖，支持多轮不重复。",
+    longDescription:
+      "粘贴参与名单（支持换行、逗号、顿号分隔），设置每次抽取人数，滚动动画后公平抽出中奖者。中奖者自动移出奖池可连续抽多轮不重复，支持保留往轮记录与一键复制名单。抽奖使用加密级随机数，全部在浏览器本地完成。",
+    keywords: ["在线抽奖", "随机点名", "名单抽奖", "年会抽奖", "抽奖工具", "抽人"],
+    icon: "party",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["名单"],
+    usageSteps: [
+      "粘贴参与名单，选择每次抽取的人数",
+      "点击开始抽奖，滚动停止后公布结果",
+      "中奖者自动移出奖池，可继续抽取或复制名单",
+    ],
+  },
+  {
+    slug: "kinship",
+    category: "life",
+    name: "亲戚称呼计算器",
+    shortName: "亲戚称呼",
+    description: "点一点算出该怎么称呼，逢年过节不叫错。",
+    longDescription:
+      "点选“爸爸的哥哥”这类关系链，立即算出该叫什么（大爷 / 伯父）；也可以反过来输入称呼查TA和你的关系。支持按我的性别区分称呼口径，覆盖三代内直系与旁系，基于开源库 relationship.js 在浏览器本地计算。",
+    keywords: ["亲戚称呼计算器", "亲戚关系计算", "怎么称呼", "叫什么", "过年亲戚称呼", "亲属关系"],
+    icon: "users",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["称呼", "关系"],
+    cardTag: "开源词库 · 本地计算",
+    usageSteps: [
+      "选择点选关系链或输入称呼两种方式",
+      "点选称呼或输入如“舅公”“爸爸的姐姐的儿子”",
+      "立即显示规范称呼与关系解释",
+    ],
   },
   {
     slug: "mortgage-calculator",
