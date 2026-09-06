@@ -4,6 +4,7 @@ import { AiPptWorkbench } from "@/components/ai-ppt-workbench";
 import { GifWorkbench } from "@/components/gif-workbench";
 import { ImageToTextWorkbench } from "@/components/image-to-text-workbench";
 import { PdfProtectWorkbench } from "@/components/pdf-protect-workbench";
+import { PdfToExcelWorkbench } from "@/components/pdf-to-excel-workbench";
 import { TextImageWorkbench } from "@/components/text-image-workbench";
 import { KinshipWorkbench } from "@/components/kinship-workbench";
 import { LotteryWorkbench } from "@/components/lottery-workbench";
@@ -90,6 +91,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <LetterWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
+    case "pdf-to-excel":
+      return <PdfToExcelWorkbench />;
     case "image-to-text":
       return <ImageToTextWorkbench />;
     case "video-to-gif":

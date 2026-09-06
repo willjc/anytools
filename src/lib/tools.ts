@@ -364,6 +364,26 @@ export const tools: readonly ToolDefinition[] = [
     accepts: [".doc", ".docx"],
   },
   {
+    slug: "pdf-to-excel",
+    category: "pdf",
+    name: "PDF 转 Excel",
+    shortName: "PDF 转 Excel",
+    description: "还原 PDF 中的表格为可编辑的 Excel 文件。",
+    longDescription:
+      "上传含表格的 PDF（报表、账单、成绩单等），MinerU 云端识别表格结构并还原为行列数据，逐表预览后下载 xlsx 文件，每个表格对应一个工作表，数字自动转为可计算的单元格。复杂合并单元格可能出现错位，文件处理完立即删除。",
+    keywords: ["PDF 转 Excel", "PDF 表格提取", "PDF 表格转 Excel", "PDF 转表格", "报表转 Excel", "PDF 数据提取"],
+    icon: "convert",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".pdf"],
+    cardTag: "MinerU 云端识别",
+    usageSteps: [
+      "上传含表格的 PDF 文件",
+      "MinerU 云端识别表格，请保持页面打开",
+      "逐表预览确认后下载 Excel 文件",
+    ],
+  },
+  {
     slug: "pdf-signature",
     category: "pdf",
     name: "PDF 签名 / 盖章",
