@@ -64,6 +64,8 @@ services:
     environment:
       ASR_MODEL_SIZE: ${ASR_MODEL_SIZE:-base}
       OMP_NUM_THREADS: "2"
+      HF_HOME: /models/.cache
+      XDG_CACHE_HOME: /models/.cache
     volumes:
       - asr-models:/models
     read_only: true
