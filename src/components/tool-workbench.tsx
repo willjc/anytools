@@ -8,6 +8,14 @@ import { TextImageWorkbench } from "@/components/text-image-workbench";
 import { KinshipWorkbench } from "@/components/kinship-workbench";
 import { LotteryWorkbench } from "@/components/lottery-workbench";
 import { MarqueeWorkbench } from "@/components/marquee-workbench";
+import { InstallmentAprWorkbench } from "@/components/installment-apr-workbench";
+import { IouWorkbench } from "@/components/iou-workbench";
+import { SeveranceWorkbench } from "@/components/severance-workbench";
+import { PeriodWorkbench } from "@/components/period-workbench";
+import { AaSettleWorkbench } from "@/components/aa-settle-workbench";
+import { TtsReaderWorkbench } from "@/components/tts-reader-workbench";
+import { AiExplainWorkbench } from "@/components/ai-explain-workbench";
+import { LetterWorkbench } from "@/components/letter-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -60,6 +68,26 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <KinshipWorkbench />;
     case "marquee":
       return <MarqueeWorkbench />;
+    case "installment-apr":
+      return <InstallmentAprWorkbench />;
+    case "iou-generator":
+      return <IouWorkbench />;
+    case "severance-calculator":
+      return <SeveranceWorkbench />;
+    case "period-tracker":
+      return <PeriodWorkbench />;
+    case "aa-settle":
+      return <AaSettleWorkbench />;
+    case "tts-reader":
+      return <TtsReaderWorkbench />;
+    case "payslip-explain":
+      return <AiExplainWorkbench task="payslip" />;
+    case "checkup-explain":
+      return <AiExplainWorkbench task="checkup" />;
+    case "medication-guide":
+      return <AiExplainWorkbench task="medication" />;
+    case "letter-draft":
+      return <LetterWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
     case "image-to-text":

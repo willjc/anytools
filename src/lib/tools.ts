@@ -72,7 +72,17 @@ export type ToolDefinition = {
     | "text"
     | "party"
     | "users"
-    | "screen";
+    | "screen"
+    | "percent"
+    | "receipt"
+    | "scale"
+    | "wallet"
+    | "pulse"
+    | "pill"
+    | "calheart"
+    | "mail"
+    | "calculator"
+    | "volume";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -714,6 +724,205 @@ export const tools: readonly ToolDefinition[] = [
       "输入要显示的一句话，挑选配色与字号",
       "选择向左/向右滚动或静止举牌",
       "点击全屏播放，把手机横过来举高高",
+    ],
+  },
+  {
+    slug: "installment-apr",
+    category: "life",
+    name: "分期利率换算器",
+    shortName: "分期利率",
+    description: "月费率 0.6% 实际年化多少？一算吓一跳。",
+    longDescription:
+      "信用卡、花呗、白条分期宣传的『月手续费率』并不等于年利率：本金逐月归还，手续费却按全额收取。输入金额、期数与费率，用 IRR 算出真实年化利率，与房贷利率一比就知道分期有多贵。计算在浏览器本地完成。",
+    keywords: ["分期利率计算", "实际年化利率", "IRR 计算器", "信用卡分期划算吗", "花呗分期利率", "月费率转年利率"],
+    icon: "percent",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["数值"],
+    usageSteps: [
+      "输入分期金额与期数",
+      "选择按月手续费率或按每月还款额",
+      "实时看到真实年化利率与总手续费",
+    ],
+  },
+  {
+    slug: "iou-generator",
+    category: "life",
+    name: "借条生成器",
+    shortName: "借条生成",
+    description: "填空生成规范借条，欠钱不还也有据可依。",
+    longDescription:
+      "借钱最怕写错借条。填写双方信息、金额、日期与利率，自动生成包含法定要素的规范借条（金额大小写、利率红线提示、转账凭证条款），可下载图片打印后签名按手印。全部在浏览器本地生成，隐私不上传。",
+    keywords: ["借条模板", "借条怎么写", "欠条生成器", "规范借条", "借款合同", "借钱凭证"],
+    icon: "receipt",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["文本", "数值"],
+    usageSteps: [
+      "填写双方姓名、金额、日期与利率",
+      "预览自动生成的规范借条",
+      "下载图片打印，借款人当场签名按手印",
+    ],
+  },
+  {
+    slug: "severance-calculator",
+    category: "life",
+    name: "经济补偿金计算器",
+    shortName: "补偿金计算",
+    description: "被裁应得 N、N+1 还是 2N？输入即知。",
+    longDescription:
+      "按《劳动合同法》通行口径估算经济补偿：支持协商解除（N）、无过失辞退未提前通知（N+1）、违法解除（2N）与合同到期不续签四种情形，自动处理工龄折算与社平工资三倍封顶。计算在浏览器本地完成。",
+    keywords: ["经济补偿金计算", "裁员赔偿 N+1", "2N 赔偿", "辞退补偿", "劳动法补偿", "被裁拿多少钱"],
+    icon: "scale",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["日期", "数值"],
+    usageSteps: [
+      "选择离职情形（N / N+1 / 2N / 到期不续签）",
+      "填写入职离职日期与月平均工资",
+      "实时看到补偿金额与法定说明",
+    ],
+  },
+  {
+    slug: "period-tracker",
+    category: "life",
+    name: "经期 / 安全期记录",
+    shortName: "经期记录",
+    description: "记录经期、预测周期，数据只留在本机。",
+    longDescription:
+      "记录每次经期开始日，自动推算平均周期、预测下次经期、排卵日与易孕窗口，并以日历视图展示。所有数据仅保存在你自己的浏览器里，永不上传服务器。日历法受多种因素影响，不可作为避孕依据。",
+    keywords: ["经期记录", "安全期计算器", "排卵日计算", "月经日历", "例假记录", "生理期 App"],
+    icon: "calheart",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["日期"],
+    cardTag: "隐私数据不出设备",
+    usageSteps: [
+      "添加每次经期开始日期",
+      "自动预测下次经期、排卵日与易孕期",
+      "日历视图直观查看，数据仅存本机",
+    ],
+  },
+  {
+    slug: "aa-settle",
+    category: "life",
+    name: "聚会 AA 结算器",
+    shortName: "AA 结算",
+    description: "谁垫了钱谁欠谁？最少转账次数结清。",
+    longDescription:
+      "聚会、旅游、合租分摊算不清？填写每人垫付的金额，自动按人均分摊，并给出最少转账次数的结清方案，一键复制发群里。金额用整数分计算避免浮点误差，全部在浏览器本地完成。",
+    keywords: ["AA 记账", "聚会分摊", "旅游算账", "AA 结算", "转账计算", "多人分摊"],
+    icon: "calculator",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["数值"],
+    usageSteps: [
+      "填写每人姓名与垫付金额",
+      "自动算出人均与最少转账方案",
+      "复制结算方案发到群里照着转",
+    ],
+  },
+  {
+    slug: "tts-reader",
+    category: "create",
+    name: "文章朗读器",
+    shortName: "文章朗读",
+    description: "粘贴文章读给你听，通勤路上解放双眼。",
+    longDescription:
+      "把文章、通知、公众号内容粘贴进来，浏览器语音合成直接朗读，支持语速调节、暂停继续与中文语音选择。朗读在浏览器本地完成，文字不上传。适合通勤听文、护眼听读与给老人读通知。",
+    keywords: ["文章朗读", "文字转语音", "网页朗读", "听文章", "语音阅读", "TTS 在线"],
+    icon: "volume",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["文本"],
+    usageSteps: [
+      "粘贴要朗读的文章",
+      "选择语速与语音，点击开始朗读",
+      "支持暂停、继续与停止",
+    ],
+  },
+  {
+    slug: "payslip-explain",
+    category: "create",
+    name: "工资条解读",
+    shortName: "工资条解读",
+    description: "到手为什么这么少？逐项讲明白。",
+    longDescription:
+      "把工资条各栏粘贴进来，AI 逐项解释每一栏是什么、为什么扣，核对社保公积金个税扣除是否在合理区间，并告诉你该问 HR 哪些问题。解读由 DeepSeek 在云端生成，仅供参考。",
+    keywords: ["工资条解读", "工资计算", "社保扣款", "公积金个税", "到手工资", "看不懂工资条"],
+    icon: "wallet",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["文本"],
+    headerTag: "AI 云端解读 · 内容将发送至 DeepSeek",
+    cardTag: "AI 云端解读",
+    usageSteps: [
+      "把工资条各栏粘贴为文字（可拍照后用 OCR）",
+      "填写所在城市帮助估算社保",
+      "AI 逐项解读并指出异常扣款",
+    ],
+  },
+  {
+    slug: "checkup-explain",
+    category: "create",
+    name: "体检报告解读",
+    shortName: "体检报告解读",
+    description: "箭头上上下下，AI 帮你看懂每个指标。",
+    longDescription:
+      "粘贴体检报告的异常指标，AI 用大白话解释每个指标偏高偏低的常见原因、需要重视的程度排序、建议的复查项目，并提示需要尽快就医的警示信号。解读不构成医疗建议，请以医生诊断为准。",
+    keywords: ["体检报告解读", "体检指标", "报告看不懂", "尿酸高怎么办", "体检异常", "指标解读"],
+    icon: "pulse",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["文本"],
+    headerTag: "AI 云端解读 · 内容将发送至 DeepSeek",
+    cardTag: "AI 云端解读",
+    usageSteps: [
+      "把体检报告指标粘贴为文字",
+      "选填年龄性别等基本信息",
+      "AI 按轻重排序解读并给复查建议",
+    ],
+  },
+  {
+    slug: "medication-guide",
+    category: "create",
+    name: "药品说明书大白话",
+    shortName: "说明书大白话",
+    description: "“一次 0.25g qid”翻译成人话。",
+    longDescription:
+      "把药品说明书粘贴进来，AI 转述成大白话：这个药治什么、怎么吃、饭前饭后、忘了吃怎么办、忌口与停药信号。严格基于说明书内容转述，不添加用药建议，请遵医嘱及说明书。",
+    keywords: ["药品说明书", "用药说明", "药怎么吃", "饭前饭后", "说明书翻译", "用药指导"],
+    icon: "pill",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["文本"],
+    headerTag: "AI 云端解读 · 内容将发送至 DeepSeek",
+    cardTag: "AI 云端解读",
+    usageSteps: [
+      "粘贴或 OCR 药品说明书内容",
+      "AI 转成大白话用法说明",
+      "按医生医嘱与说明书用药",
+    ],
+  },
+  {
+    slug: "letter-draft",
+    category: "create",
+    name: "辞职信 / 投诉信生成器",
+    shortName: "辞职投诉信",
+    description: "把事实交给 AI，组织成得体的正式文书。",
+    longDescription:
+      "不知道怎么开口辞职、被坑了不会写投诉？把事实经过写清楚，AI 按你选择的语气（克制礼貌 / 正式规范 / 坚决明确）起草规范的辞职信或投诉信，事实诉求一目了然。内容由 DeepSeek 在云端生成，发送前请核对事实。",
+    keywords: ["辞职信模板", "辞职信怎么写", "投诉信", "12345 投诉", "维权信", "离职申请"],
+    icon: "mail",
+    processing: "cloud",
+    availability: "ready",
+    accepts: ["文本"],
+    headerTag: "AI 云端起草 · 内容将发送至 DeepSeek",
+    cardTag: "AI 云端起草",
+    usageSteps: [
+      "选择辞职信或投诉信，写清事实经过",
+      "选择语气与诉求",
+      "AI 起草后复制发送，记得核对事实",
     ],
   },
   {
