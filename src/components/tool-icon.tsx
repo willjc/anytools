@@ -27,6 +27,7 @@ import {
   PartyPopper,
   PenLine,
   Percent,
+  Printer,
   Pill,
   Presentation,
   QrCode,
@@ -40,6 +41,7 @@ import {
   Users,
   Volume2,
   Video,
+  Wifi,
   type LucideIcon,
 } from "lucide-react";
 
@@ -87,6 +89,8 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   mail: Mail,
   calculator: Calculator,
   volume: Volume2,
+  printer: Printer,
+  wifi: Wifi,
 };
 
 export function ToolIcon({

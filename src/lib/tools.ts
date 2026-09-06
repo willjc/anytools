@@ -82,7 +82,9 @@ export type ToolDefinition = {
     | "calheart"
     | "mail"
     | "calculator"
-    | "volume";
+    | "volume"
+    | "printer"
+    | "wifi";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -381,6 +383,25 @@ export const tools: readonly ToolDefinition[] = [
       "上传含表格的 PDF 文件",
       "MinerU 云端识别表格，请保持页面打开",
       "逐表预览确认后下载 Excel 文件",
+    ],
+  },
+  {
+    slug: "invoice-print",
+    category: "pdf",
+    name: "发票拼版打印",
+    shortName: "发票拼版",
+    description: "多张发票 PDF 拼到 A4 一页打印，省纸省事。",
+    longDescription:
+      "报销前把一堆电子发票 PDF 拼到 A4 纸上：支持一页 1 / 2 / 4 张，自动等比缩放居中，可显示裁切参考线。全部在浏览器本地处理，发票不会上传。打印时选择「实际大小」，沿虚线裁开即可粘贴报销。",
+    keywords: ["发票拼版", "发票打印", "电子发票合并打印", "发票排版", "A4 拼版打印", "报销发票打印"],
+    icon: "printer",
+    processing: "browser",
+    availability: "ready",
+    accepts: [".pdf"],
+    usageSteps: [
+      "选择多个发票 PDF 文件",
+      "选择每张 A4 打印的张数",
+      "生成拼版并下载，打印后沿虚线裁开",
     ],
   },
   {
@@ -840,6 +861,25 @@ export const tools: readonly ToolDefinition[] = [
       "填写每人姓名与垫付金额",
       "自动算出人均与最少转账方案",
       "复制结算方案发到群里照着转",
+    ],
+  },
+  {
+    slug: "wifi-qrcode",
+    category: "create",
+    name: "WiFi 二维码",
+    shortName: "WiFi 二维码",
+    description: "填上 WiFi 名和密码，客人扫码直接连网。",
+    longDescription:
+      "输入 WiFi 名称与密码，生成标准的 WiFi 连接二维码：手机相机或微信扫一扫即可加入网络，不用再一个字一个字念密码。支持 WPA/WPA2、WEP 与开放网络，可标记隐藏网络。生成在浏览器本地完成，WiFi 密码不上传。",
+    keywords: ["WiFi 二维码", "WiFi 连接码", "无线二维码", "客人连 WiFi", "路由器二维码", "扫码连网"],
+    icon: "wifi",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["文本"],
+    usageSteps: [
+      "填写 WiFi 名称、密码与加密方式",
+      "生成二维码并下载 PNG",
+      "打印贴在前台或路由器旁，扫码即连",
     ],
   },
   {

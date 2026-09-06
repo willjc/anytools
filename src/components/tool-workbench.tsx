@@ -17,6 +17,8 @@ import { AaSettleWorkbench } from "@/components/aa-settle-workbench";
 import { TtsReaderWorkbench } from "@/components/tts-reader-workbench";
 import { AiExplainWorkbench } from "@/components/ai-explain-workbench";
 import { LetterWorkbench } from "@/components/letter-workbench";
+import { InvoicePrintWorkbench } from "@/components/invoice-print-workbench";
+import { WifiQrcodeWorkbench } from "@/components/wifi-qrcode-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -89,6 +91,10 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <AiExplainWorkbench task="medication" />;
     case "letter-draft":
       return <LetterWorkbench />;
+    case "invoice-print":
+      return <InvoicePrintWorkbench />;
+    case "wifi-qrcode":
+      return <WifiQrcodeWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
     case "pdf-to-excel":

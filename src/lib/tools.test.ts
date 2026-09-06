@@ -5,7 +5,7 @@ import { getToolBySlug, getToolsForCategory, toolCategories, tools } from "@/lib
 describe("tool registry", () => {
   it("uses unique stable slugs", () => {
     const slugs = tools.map((tool) => tool.slug);
-    expect(tools).toHaveLength(54);
+    expect(tools).toHaveLength(56);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
