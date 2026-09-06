@@ -6,9 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# 国内 pip 镜像，与主镜像的 apt 镜像策略一致
+# 国内 pip 镜像（阿里云），与主镜像的 apt 镜像策略一致
 RUN pip install --no-cache-dir \
-    -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    -i https://mirrors.aliyun.com/pypi/simple/ \
     fastapi "uvicorn[standard]" python-multipart faster-whisper
 
 COPY main.py .
