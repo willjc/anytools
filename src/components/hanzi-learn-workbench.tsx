@@ -13,6 +13,8 @@ import {
   type HanziHistoryEntry,
 } from "@/lib/hanzi-learn";
 
+const nowMs = () => Date.now();
+
 type WriterApi = {
   animateCharacter: (options?: Record<string, unknown>) => Promise<unknown> | undefined;
   animateStroke: (strokeNumber: number, options?: Record<string, unknown>) => Promise<unknown> | undefined;
@@ -61,11 +63,16 @@ export function HanziLearnWorkbench() {
   const nextStrokeRef = useRef(0);
 
   useEffect(() => {
-    setHistory(loadHistory());
-    if (typeof navigator !== "undefined" && !navigator.mediaDevices?.getUserMedia) {
-      setSupported(false);
-    }
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setHistory(loadHistory());
+      if (typeof navigator !== "undefined" && !navigator.mediaDevices?.getUserMedia) {
+        setSupported(false);
+      }
+    });
     return () => {
+      cancelled = true;
       abortRef.current?.abort();
       recorderRef.current?.stream.getTracks().forEach((track) => track.stop());
     };
@@ -163,7 +170,7 @@ export function HanziLearnWorkbench() {
       };
       recorder.onstop = () => {
         stream.getTracks().forEach((track) => track.stop());
-        const duration = Date.now() - startedAtRef.current;
+        const duration = nowMs() - startedAtRef.current;
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" });
         if (duration < 600 || blob.size < 1200) {
           setSpeechState("idle");
@@ -173,7 +180,7 @@ export function HanziLearnWorkbench() {
         void submitRecording(blob, recorder.mimeType.includes("mp4") ? "recording.mp4" : "recording.webm");
       };
       recorderRef.current = recorder;
-      startedAtRef.current = Date.now();
+      startedAtRef.current = nowMs();
       recorder.start();
       setSpeechState("recording");
       setMessage("正在听……说完松手");
