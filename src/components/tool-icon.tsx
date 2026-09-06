@@ -17,6 +17,7 @@ import {
   LayoutGrid,
   ListOrdered,
   Lock,
+  MonitorSmartphone,
   Minimize2,
   Music,
   PartyPopper,
@@ -65,6 +66,7 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   text: TextQuote,
   party: PartyPopper,
   users: Users,
+  screen: MonitorSmartphone,
 };
 
 export function ToolIcon({

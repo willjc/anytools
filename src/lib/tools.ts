@@ -71,7 +71,8 @@ export type ToolDefinition = {
     | "clapper"
     | "text"
     | "party"
-    | "users";
+    | "users"
+    | "screen";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -694,6 +695,25 @@ export const tools: readonly ToolDefinition[] = [
       "选择点选关系链或输入称呼两种方式",
       "点选称呼或输入如“舅公”“爸爸的姐姐的儿子”",
       "立即显示规范称呼与关系解释",
+    ],
+  },
+  {
+    slug: "marquee",
+    category: "life",
+    name: "滚动大字屏",
+    shortName: "滚动字幕",
+    description: "手机全屏滚动大字，接机叫号应援都能用。",
+    longDescription:
+      "输入一句话让手机变成 LED 大字屏：支持接机白底红字、车屏黑底黄字、荧光绿、素雅黑白四种配色，可向左/向右滚动或静止举牌（自动缩小字号保证一行放下）。全屏播放期间屏幕保持常亮，全部效果在浏览器本地生成。",
+    keywords: ["滚动字幕", "LED 大字屏", "接机牌", "滚动大字", "手机弹字幕", "应援字幕"],
+    icon: "screen",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["文字"],
+    usageSteps: [
+      "输入要显示的一句话，挑选配色与字号",
+      "选择向左/向右滚动或静止举牌",
+      "点击全屏播放，把手机横过来举高高",
     ],
   },
   {
