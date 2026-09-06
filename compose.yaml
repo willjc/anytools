@@ -66,6 +66,8 @@ services:
       OMP_NUM_THREADS: "2"
       HF_HOME: /models/.cache
       XDG_CACHE_HOME: /models/.cache
+      HF_HUB_DISABLE_XET: "1"
+      HOME: /models/home
     volumes:
       - asr-models:/models
     read_only: true
