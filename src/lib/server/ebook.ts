@@ -30,7 +30,7 @@ export { isEbookInputFormat, isEbookOutputFormat };export function buildEbookCon
 }
 
 export async function convertEbook(inputBytes: Uint8Array, inputExtension: EbookInputFormat, outputFormat: EbookOutputFormat): Promise<Uint8Array> {
-  await requireBinary("ebook-convert", "安装 calibre 后该功能可用。");
+  await requireBinary("ebook-convert", "电子书转换服务正在升级，暂不可用，请稍后再试。");
   return withTempDir("alltools-ebook-", async (dir) => {
     const inputPath = join(dir, `input.${inputExtension}`);
     const outputPath = join(dir, `output.${outputFormat}`);

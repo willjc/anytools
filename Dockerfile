@@ -40,13 +40,11 @@ RUN set -eux; \
   && apt-get install -y --no-install-recommends libreoffice-writer libreoffice-draw fonts-noto-cjk \
   && rm -rf /var/lib/apt/lists/*
 
-# calibre 的 ebook-convert 用于电子书格式转换（EPUB/MOBI/AZW3 等）
-RUN set -eux; \
-  find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends calibre \
-  && rm -rf /var/lib/apt/lists/*
-
+# 电子书格式转换依赖 calibre 的 ebook-convert，当前未安装。
+# Debian 的 calibre 包依赖 isa-support 的 SSE3 校验，该校验在本机 Hygon（海光）CPU 上
+# 会误判「不支持 SSE3」并中断 apt，导致整层构建失败。
+# 缺少该二进制时 ebook-convert 接口返回 503，前端提示服务暂不可用；补回时改用
+# calibre 官方自包含二进制，绕开 apt 的 isa-support 依赖。
 RUN set -eux; \
   find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
   && apt-get update \
