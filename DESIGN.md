@@ -107,6 +107,7 @@
 
 - 主色 `emerald-700`,画布 `#fbfbfa`,发丝线 `slate-200`(暖),墨色 `slate-950`(暖)。
 - 新增工具 = 只改 `src/lib/tools.ts`(自动获得页面/首页/站点地图)+ 一个 workbench 组件 + 在 `tool-workbench.tsx` 加分发。
+- 新增工具后必须同步 `src/lib/tools.test.ts`:更新工具总数断言与所属分类的 slug 列表断言;并同步 README 顶部的工具数量与分类清单。漏改会让测试直接变红。
 - 现成 prompt:
 
 ```text

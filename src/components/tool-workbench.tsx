@@ -20,6 +20,9 @@ import { LetterWorkbench } from "@/components/letter-workbench";
 import { InvoicePrintWorkbench } from "@/components/invoice-print-workbench";
 import { WifiQrcodeWorkbench } from "@/components/wifi-qrcode-workbench";
 import { HanziLearnWorkbench } from "@/components/hanzi-learn-workbench";
+import { RemoveBgWorkbench } from "@/components/remove-bg-workbench";
+import { EbookConvertWorkbench } from "@/components/ebook-convert-workbench";
+import { PdfMetadataWorkbench } from "@/components/pdf-metadata-workbench";
 import { AudioConvertWorkbench } from "@/components/audio-convert-workbench";
 import { HeicToJpgWorkbench } from "@/components/heic-to-jpg-workbench";
 import { ImageGridWorkbench } from "@/components/image-grid-workbench";
@@ -33,6 +36,7 @@ import { ImageWorkbench } from "@/components/image-workbench";
 import { DateCalculatorWorkbench } from "@/components/date-calculator-workbench";
 import { DocumentToMarkdownWorkbench } from "@/components/document-to-markdown-workbench";
 import { MarkdownExportWorkbench } from "@/components/markdown-export-workbench";
+import { MarkdownPreviewWorkbench } from "@/components/markdown-preview-workbench";
 import { MortgageWorkbench } from "@/components/mortgage-workbench";
 import { PdfCompressWorkbench } from "@/components/pdf-compress-workbench";
 import { PdfEditTextWorkbench } from "@/components/pdf-edit-text-workbench";
@@ -98,6 +102,12 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <WifiQrcodeWorkbench />;
     case "hanzi-stroke":
       return <HanziLearnWorkbench />;
+    case "remove-bg":
+      return <RemoveBgWorkbench />;
+    case "ebook-convert":
+      return <EbookConvertWorkbench />;
+    case "pdf-metadata":
+      return <PdfMetadataWorkbench />;
     case "pdf-protect":
       return <PdfProtectWorkbench />;
     case "pdf-to-excel":
@@ -160,6 +170,8 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <QrCodeWorkbench />;
     case "markdown-export":
       return <MarkdownExportWorkbench />;
+    case "markdown-preview":
+      return <MarkdownPreviewWorkbench />;
     case "document-to-markdown":
       return <DocumentToMarkdownWorkbench />;
     case "text-cleaner":

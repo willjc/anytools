@@ -1,6 +1,7 @@
 import {
   ArrowLeftRight,
   Banknote,
+  BookOpen,
   Brush,
   Calculator,
   CalendarDays,
@@ -10,6 +11,7 @@ import {
   Crop,
   Droplets,
   Eraser,
+  FileCode2,
   FileStack,
   FileType,
   Globe,
@@ -33,10 +35,12 @@ import {
   Presentation,
   QrCode,
   Ruler,
+  Scissors,
   ReceiptText,
   Scale,
   ScanText,
   Stamp,
+  Tag,
   TextQuote,
   Wallet,
   Users,
@@ -93,6 +97,10 @@ const icons: Record<ToolDefinition["icon"], LucideIcon> = {
   printer: Printer,
   wifi: Wifi,
   brush: Brush,
+  scissors: Scissors,
+  book: BookOpen,
+  tag: Tag,
+  markdown: FileCode2,
 };
 
 export function ToolIcon({

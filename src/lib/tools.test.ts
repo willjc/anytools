@@ -5,7 +5,7 @@ import { getToolBySlug, getToolsForCategory, toolCategories, tools } from "@/lib
 describe("tool registry", () => {
   it("uses unique stable slugs", () => {
     const slugs = tools.map((tool) => tool.slug);
-    expect(tools).toHaveLength(57);
+    expect(tools).toHaveLength(61);
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
@@ -14,6 +14,7 @@ describe("tool registry", () => {
     expect(getToolBySlug("missing-tool")).toBeUndefined();
     expect(getToolsForCategory("image").map((tool) => tool.slug)).toEqual([
       "image-to-text",
+      "remove-bg",
       "image-compress",
       "image-convert",
       "image-crop",

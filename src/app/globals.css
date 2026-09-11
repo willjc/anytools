@@ -67,6 +67,174 @@ body {
   display: none;
 }
 
+/*
+ * Markdown 预览排版。内容由 src/lib/markdown-preview.ts 渲染后插入，
+ * 样式集中在此约束；色值全部取自 DESIGN.md 第 2 节的色板。
+ */
+.markdown-preview {
+  color: #47453f; /* slate-700 */
+  font-size: 0.875rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.markdown-preview > :first-child {
+  margin-top: 0;
+}
+
+.markdown-preview > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  margin: 1.6em 0 0.6em;
+  color: #151412; /* slate-950 */
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.markdown-preview h1 {
+  font-size: 1.5rem;
+}
+
+.markdown-preview h2 {
+  font-size: 1.25rem;
+}
+
+.markdown-preview h3 {
+  font-size: 1.0625rem;
+}
+
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  font-size: 1rem;
+}
+
+.markdown-preview p {
+  margin: 0.75em 0;
+}
+
+.markdown-preview a {
+  color: #047857; /* emerald-700 */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-preview a:hover {
+  color: #065f46; /* emerald-800 */
+}
+
+.markdown-preview strong {
+  color: #21201c; /* slate-900 */
+  font-weight: 600;
+}
+
+.markdown-preview del {
+  color: #706d66; /* slate-500 */
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+}
+
+.markdown-preview ul {
+  list-style: disc;
+}
+
+.markdown-preview ol {
+  list-style: decimal;
+}
+
+.markdown-preview li {
+  margin: 0.25em 0;
+}
+
+.markdown-preview li > ul,
+.markdown-preview li > ol {
+  margin: 0.25em 0;
+}
+
+.markdown-preview li:has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-left: -1.25em;
+}
+
+.markdown-preview input[type="checkbox"] {
+  margin-right: 0.5em;
+  accent-color: #047857; /* emerald-700 */
+}
+
+.markdown-preview blockquote {
+  margin: 1em 0;
+  border-left: 3px solid #a7f3d0; /* emerald-200 */
+  padding: 0.25em 0 0.25em 1em;
+  color: #5f5d56; /* slate-600 */
+}
+
+.markdown-preview code {
+  border-radius: 0.375rem;
+  background: #f1efec; /* slate-100 */
+  padding: 0.125em 0.375em;
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+}
+
+.markdown-preview pre {
+  margin: 1em 0;
+  overflow-x: auto;
+  border: 1px solid #e7e4df; /* slate-200 */
+  border-radius: 0.75rem;
+  background: #fafaf9; /* slate-50 */
+  padding: 0.875rem 1rem;
+}
+
+.markdown-preview pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.markdown-preview table {
+  margin: 1em 0;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  border: 1px solid #e7e4df; /* slate-200 */
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.markdown-preview th {
+  background: #f1efec; /* slate-100 */
+  color: #21201c; /* slate-900 */
+  font-weight: 600;
+}
+
+.markdown-preview hr {
+  margin: 1.5em 0;
+  border: 0;
+  border-top: 1px solid #e7e4df; /* slate-200 */
+}
+
+.markdown-preview img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+}
+
 ::selection {
   background: #a7f3d0;
   color: #064e3b;

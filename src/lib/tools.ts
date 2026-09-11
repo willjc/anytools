@@ -85,7 +85,11 @@ export type ToolDefinition = {
     | "volume"
     | "printer"
     | "wifi"
-    | "brush";
+    | "brush"
+    | "scissors"
+    | "book"
+    | "tag"
+    | "markdown";
   processing: "browser" | "cloud";
   availability: "ready" | "comingSoon";
   accepts: readonly string[];
@@ -406,6 +410,65 @@ export const tools: readonly ToolDefinition[] = [
     ],
   },
   {
+    slug: "remove-bg",
+    category: "image",
+    name: "图片去背景",
+    shortName: "图片去背景",
+    description: "AI 一键抠图，输出透明背景 PNG。",
+    longDescription:
+      "上传人物、商品或物品照片，AI 模型自动识别主体并去除背景，输出透明背景 PNG，可直接用于海报、简历、电商详情。由服务器端开源模型 rembg（u2netp）处理，图片处理完立即删除。复杂毛发边缘可能需要手动微调。",
+    keywords: ["图片去背景", "抠图", "透明背景", "一键抠图", "去背", "remove background"],
+    icon: "scissors",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".jpg", ".jpeg", ".png", ".webp"],
+    cardTag: "AI 云端模型",
+    usageSteps: [
+      "选择 JPG / PNG / WebP 图片",
+      "AI 模型自动识别主体并去除背景",
+      "预览对比后下载透明 PNG",
+    ],
+  },
+  {
+    slug: "ebook-convert",
+    category: "pdf",
+    name: "电子书格式转换",
+    shortName: "电子书转换",
+    description: "EPUB、MOBI、AZW3 与 PDF、Word 互转。",
+    longDescription:
+      "上传 EPUB、MOBI、AZW3、PDF、Word、TXT、HTML 或 RTF，转换为 PDF、EPUB、Word、TXT、MOBI、AZW3 等格式，由服务器端 calibre 引擎完成，Kindle 和微信读书用户都适用。PDF 输出为 A4 页面，文件处理完立即删除。",
+    keywords: ["电子书转换", "EPUB 转 PDF", "MOBI 转换", "AZW3 转换", "EPUB 转 Word", "calibre 在线"],
+    icon: "book",
+    processing: "cloud",
+    availability: "ready",
+    accepts: [".epub", ".mobi", ".azw3", ".pdf", ".docx", ".txt", ".html", ".rtf"],
+    cardTag: "calibre 引擎",
+    usageSteps: [
+      "上传电子书或文档（EPUB / MOBI / PDF 等）",
+      "选择目标格式（PDF / EPUB / Word / TXT / Kindle）",
+      "转换完成后下载文件",
+    ],
+  },
+  {
+    slug: "pdf-metadata",
+    category: "pdf",
+    name: "PDF 元数据编辑",
+    shortName: "PDF 元数据",
+    description: "查看修改标题作者等信息，一键清痕迹。",
+    longDescription:
+      "查看并编辑 PDF 的标题、作者、主题、关键词、创建程序等信息，也可以一键清空生成软件痕迹后下载，适合对外分享前去除个人信息。全部在浏览器本地处理，文件不会上传。",
+    keywords: ["PDF 元数据", "PDF 属性修改", "PDF 作者修改", "PDF 标题修改", "去除 PDF 信息", "PDF 信息查看"],
+    icon: "tag",
+    processing: "browser",
+    availability: "ready",
+    accepts: [".pdf"],
+    usageSteps: [
+      "上传 PDF 查看当前元数据",
+      "编辑标题、作者等字段，或一键清空痕迹",
+      "保存并下载新文件",
+    ],
+  },
+  {
     slug: "pdf-signature",
     category: "pdf",
     name: "PDF 签名 / 盖章",
@@ -605,6 +668,26 @@ export const tools: readonly ToolDefinition[] = [
     processing: "cloud",
     availability: "ready",
     accepts: [".md", ".markdown"],
+  },
+  {
+    slug: "markdown-preview",
+    category: "create",
+    name: "Markdown 预览",
+    shortName: "Markdown 预览",
+    description: "粘贴 Markdown 实时预览排版，并可下载 .md 文件。",
+    longDescription:
+      "把 Markdown 源码粘贴进来，右侧即时渲染出标题、列表、表格、代码块的真实排版效果，确认无误后下载 .md 文件留档或分享。渲染完全在浏览器本地完成，文字不上传；内嵌 HTML 会作为文字显示，不参与渲染。",
+    keywords: ["Markdown 预览", "Markdown 在线预览", "Markdown 渲染", "md 文件下载", "Markdown 编辑器"],
+    icon: "markdown",
+    processing: "browser",
+    availability: "ready",
+    accepts: ["文本", ".md"],
+    cardTag: "本地渲染 · 不上传",
+    usageSteps: [
+      "把 Markdown 源码粘贴到左侧输入框",
+      "右侧即时预览标题、列表、表格与代码块排版",
+      "确认后下载 .md 文件，或继续修改内容",
+    ],
   },
   {
     slug: "document-to-markdown",

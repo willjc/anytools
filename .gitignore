@@ -37,6 +37,9 @@ yarn-error.log*
 # Agent operational logs
 .learnings/
 .transfer-data/
+.mimosa/
+.zcode/
+.workbuddy-ai/
 
 # vercel
 .vercel
