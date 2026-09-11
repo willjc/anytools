@@ -41,7 +41,7 @@ async function convertWithLibreOffice({
 
   activeLibreOfficeConversions += 1;
   try {
-    await requireBinary("soffice", "安装 LibreOffice 后该功能可用。");
+    await requireBinary("soffice");
     return await withTempDir(prefix, async (dir) => {
       const inputPath = join(dir, `input.${inputExtension}`);
       const outDir = join(dir, "out");

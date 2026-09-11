@@ -38,7 +38,7 @@ async function mineruJson<T>(url: string, token: string, init?: RequestInit): Pr
 }
 
 async function extractFullMarkdown(zipBytes: Uint8Array): Promise<Uint8Array> {
-  await requireBinary("unzip", "安装 unzip 后该功能可用。");
+  await requireBinary("unzip");
   return withTempDir("alltools-mineru-", async (dir) => {
     const zipPath = join(dir, "result.zip");
     await writeFile(zipPath, zipBytes);

@@ -95,6 +95,11 @@ services:
     image: alltools-rembg:${RELEASE_ID:-local}
     init: true
     restart: unless-stopped
+    environment:
+      # pymatting 的 @njit(cache=True) 需要可写的 JIT 编译缓存目录。
+      # 容器是只读文件系统，必须显式指向 tmpfs，否则 numba 找不到可用
+      # locator 会抛 "no locator available" 并让容器反复崩溃重启。
+      NUMBA_CACHE_DIR: /tmp/numba-cache
     read_only: true
     tmpfs:
       - /tmp

@@ -97,7 +97,7 @@ async function readTempPdf(dir: string): Promise<Uint8Array> {
 }
 
 export async function compressPdfWithQpdf(inputBytes: Uint8Array): Promise<Uint8Array> {
-  await requireBinary("qpdf", "安装 qpdf 后该功能可用。");
+  await requireBinary("qpdf");
   return withTempDir("alltools-compress-", async (dir) => {
     const inputPath = join(dir, "input.pdf");
     const outputPath = join(dir, "output.pdf");
@@ -118,7 +118,7 @@ export async function compressPdfWithQpdf(inputBytes: Uint8Array): Promise<Uint8
 
 /** 给 PDF 加密：可设打开密码，并控制打印 / 复制 / 修改权限（256 位 AES）。 */
 export async function encryptPdf(inputBytes: Uint8Array, options: PdfEncryptionOptions): Promise<Uint8Array> {
-  await requireBinary("qpdf", "安装 qpdf 后该功能可用。");
+  await requireBinary("qpdf");
   return withTempDir("alltools-protect-", async (dir) => {
     const inputPath = join(dir, "input.pdf");
     await writeFile(inputPath, inputBytes);
@@ -139,7 +139,7 @@ export async function encryptPdf(inputBytes: Uint8Array, options: PdfEncryptionO
  * @param password 打开密码；仅权限限制（可打开但禁止编辑）的文件可省略。
  */
 export async function decryptPdf(inputBytes: Uint8Array, password = ""): Promise<Uint8Array> {
-  await requireBinary("qpdf", "安装 qpdf 后该功能可用。");
+  await requireBinary("qpdf");
   return withTempDir("alltools-unlock-", async (dir) => {
     const inputPath = join(dir, "input.pdf");
     await writeFile(inputPath, inputBytes);

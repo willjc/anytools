@@ -8,7 +8,7 @@ import { requireBinary, withTempDir } from "@/lib/server/tool-runtime";
 const run = promisify(execFile);
 
 export async function convertHeicImage(inputBytes: Uint8Array, toFormat: "jpg" | "png"): Promise<Uint8Array> {
-  await requireBinary("heif-convert", "安装 libheif 后该功能可用。");
+  await requireBinary("heif-convert");
   return withTempDir("alltools-heif-", async (dir) => {
     const input = join(dir, "input.heic");
     const output = join(dir, `output.${toFormat}`);

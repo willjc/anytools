@@ -40,7 +40,7 @@ async function writeInput(dir: string, inputBytes: Uint8Array): Promise<string> 
 }
 
 export async function compressVideoToMp4(inputBytes: Uint8Array, height: VideoHeight): Promise<Uint8Array> {
-  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  await requireBinary("ffmpeg");
   return withTempDir("alltools-video-", async (dir) => {
     const input = await writeInput(dir, inputBytes);
     const output = join(dir, "output.mp4");
@@ -50,7 +50,7 @@ export async function compressVideoToMp4(inputBytes: Uint8Array, height: VideoHe
 }
 
 export async function extractAudioToMp3(inputBytes: Uint8Array): Promise<Uint8Array> {
-  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  await requireBinary("ffmpeg");
   return withTempDir("alltools-audio-", async (dir) => {
     const input = await writeInput(dir, inputBytes);
     const output = join(dir, "output.mp3");
@@ -60,7 +60,7 @@ export async function extractAudioToMp3(inputBytes: Uint8Array): Promise<Uint8Ar
 }
 
 export async function convertAudio(inputBytes: Uint8Array, format: AudioFormat, bitrateKbps: number): Promise<{ bytes: Uint8Array; extension: string }> {
-  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  await requireBinary("ffmpeg");
   return withTempDir("alltools-audio-", async (dir) => {
     const input = await writeInput(dir, inputBytes);
     const output = join(dir, `output.${format}`);
@@ -71,7 +71,7 @@ export async function convertAudio(inputBytes: Uint8Array, format: AudioFormat, 
 }
 
 export async function convertVideoToGif(inputBytes: Uint8Array, options: VideoToGifOptions): Promise<Uint8Array> {
-  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  await requireBinary("ffmpeg");
   return withTempDir("alltools-gif-", async (dir) => {
     const input = await writeInput(dir, inputBytes);
     const output = join(dir, "output.gif");
@@ -85,7 +85,7 @@ export async function convertVideoToGif(inputBytes: Uint8Array, options: VideoTo
 }
 
 export async function compressGif(inputBytes: Uint8Array, level: GifCompressLevel): Promise<Uint8Array> {
-  await requireBinary("ffmpeg", "安装 ffmpeg 后该功能可用。");
+  await requireBinary("ffmpeg");
   return withTempDir("alltools-gif-", async (dir) => {
     const input = await writeInput(dir, inputBytes);
     const output = join(dir, "output.gif");
