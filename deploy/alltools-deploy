@@ -5,8 +5,11 @@ readonly APP_ROOT="/opt/alltools"
 readonly RELEASES_DIR="$APP_ROOT/releases"
 readonly ENV_FILE="/etc/alltools/alltools.env"
 readonly PROJECT_NAME="alltools"
-readonly MAX_HEALTH_ATTEMPTS=24
-readonly SERVICES=(app gateway)
+# rembg 与 asr 必须一起纳入门控：它们不被检查时，服务没起来而发布照样绿灯
+# （2026-09-11 暴露的三个 rembg 缺陷都是在「发布成功」之后才发现的）。
+# asr 首次启动要下载模型、start_period 为 400s，所以把等待预算放到 600s。
+readonly MAX_HEALTH_ATTEMPTS=120
+readonly SERVICES=(app gateway rembg asr)
 
 release_id="${1:-}"
 if [[ ! "$release_id" =~ ^[a-f0-9]{40}$ ]]; then

@@ -12,6 +12,21 @@ app = FastAPI()
 session = new_session("u2netp")
 
 
+def _self_check() -> None:
+    """启动自检：跑一次真实推理，让链路故障表现为容器起不来。
+
+    健康检查只探 /health，不碰推理链路；模型加载或推理一旦有问题，部署会
+    显示绿灯而 /remove 持续 502。这里把问题提前暴露成启动失败。
+    """
+    probe = Image.new("RGB", (64, 64), (255, 255, 255))
+    cutout = remove(probe, session=session)
+    if cutout.mode != "RGBA":
+        raise RuntimeError(f"self-check returned {cutout.mode}, expected RGBA")
+
+
+_self_check()
+
+
 @app.get("/health")
 def health() -> dict:
     return {"ok": True, "model": "u2netp"}
