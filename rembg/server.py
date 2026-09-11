@@ -20,13 +20,16 @@ def health() -> dict:
 @app.post("/remove")
 async def remove_background(file: UploadFile) -> Response:
     data = await file.read()
-    result = remove(io.BytesIO(data), session=session)
+
+    # rembg 只接受 bytes / PIL.Image / ndarray，传 BytesIO 会直接抛 ValueError。
+    # 交给它 PIL.Image 就能原样拿回 PIL.Image，省掉一次编解码往返。
+    image = Image.open(io.BytesIO(data)).convert("RGBA")
+    cutout = remove(image, session=session)
 
     # 统一裁掉可能的透明边（rembg 有时会保留大量空白边缘）
-    image = Image.open(io.BytesIO(result))
-    bbox = image.getchannel("A").getbbox()
+    bbox = cutout.getchannel("A").getbbox()
     if bbox:
-        image = image.crop(bbox)
+        cutout = cutout.crop(bbox)
     output = io.BytesIO()
-    image.save(output, format="PNG")
+    cutout.save(output, format="PNG")
     return Response(content=output.getvalue(), media_type="image/png")
