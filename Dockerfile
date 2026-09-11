@@ -40,16 +40,27 @@ RUN set -eux; \
   && apt-get install -y --no-install-recommends libreoffice-writer libreoffice-draw fonts-noto-cjk \
   && rm -rf /var/lib/apt/lists/*
 
-# 电子书格式转换依赖 calibre 的 ebook-convert，当前未安装。
-# Debian 的 calibre 包依赖 isa-support 的 SSE3 校验，该校验在本机 Hygon（海光）CPU 上
-# 会误判「不支持 SSE3」并中断 apt，导致整层构建失败。
-# 缺少该二进制时 ebook-convert 接口返回 503，前端提示服务暂不可用；补回时改用
-# calibre 官方自包含二进制，绕开 apt 的 isa-support 依赖。
 RUN set -eux; \
   find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
   && apt-get update \
   && apt-get install -y --no-install-recommends unzip \
   && rm -rf /var/lib/apt/lists/*
+
+# calibre 提供电子书格式转换所需的 ebook-convert（EPUB / MOBI / AZW3 等）。
+#
+# Debian 的 calibre 经 libqt6webenginecore6 依赖 sse3-support，而该包的 preinst
+# 只认 GenuineIntel / AuthenticAMD，在本机 Hygon（海光）CPU 上误判「不支持 SSE3」
+# 并 abort，导致整层构建失败。CPU 实测支持 x86-64-v2 要求的全部指令集，属上游
+# 检测缺陷。这里预置一个同版本号的空包满足依赖，让 apt 跳过那个探测脚本。
+RUN set -eux; \
+  find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
+  && apt-get update \
+  && mkdir -p /tmp/sse3-stub/DEBIAN \
+  && printf 'Package: sse3-support\nVersion: 15.1\nArchitecture: amd64\nMaintainer: local <local@localhost>\nSection: misc\nPriority: optional\nDescription: Stub; the stock SSE3 probe misreports Hygon CPUs as unsupported.\n' > /tmp/sse3-stub/DEBIAN/control \
+  && dpkg-deb --build /tmp/sse3-stub /tmp/sse3-support_15.1_amd64.deb \
+  && dpkg -i /tmp/sse3-support_15.1_amd64.deb \
+  && apt-get install -y --no-install-recommends calibre \
+  && rm -rf /tmp/sse3-stub /tmp/sse3-support_15.1_amd64.deb /var/lib/apt/lists/*
 
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
