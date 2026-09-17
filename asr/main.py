@@ -46,6 +46,7 @@ async def transcribe(file: UploadFile) -> dict:
             language="zh",
             vad_filter=True,
             condition_on_previous_text=False,
+            initial_prompt="小学语文数学英语科学学习辅导。常用词：除以、乘以、加上、减去、等于、厘米、平方厘米、三角形、底、高、面积、应用题、分数、小数。",
         )
         text = "".join(segment.text for segment in segments).strip()
         return {"text": text}
