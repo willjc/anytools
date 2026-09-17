@@ -1,6 +1,5 @@
 import { ImageCropWorkbench } from "@/components/image-crop-workbench";
 import { TransferWorkbench } from "@/components/transfer-workbench";
-import { AiPptWorkbench } from "@/components/ai-ppt-workbench";
 import { GifWorkbench } from "@/components/gif-workbench";
 import { ImageToTextWorkbench } from "@/components/image-to-text-workbench";
 import { PdfProtectWorkbench } from "@/components/pdf-protect-workbench";
@@ -15,8 +14,6 @@ import { SeveranceWorkbench } from "@/components/severance-workbench";
 import { PeriodWorkbench } from "@/components/period-workbench";
 import { AaSettleWorkbench } from "@/components/aa-settle-workbench";
 import { TtsReaderWorkbench } from "@/components/tts-reader-workbench";
-import { AiExplainWorkbench } from "@/components/ai-explain-workbench";
-import { LetterWorkbench } from "@/components/letter-workbench";
 import { InvoicePrintWorkbench } from "@/components/invoice-print-workbench";
 import { WifiQrcodeWorkbench } from "@/components/wifi-qrcode-workbench";
 import { HanziLearnWorkbench } from "@/components/hanzi-learn-workbench";
@@ -66,8 +63,6 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
   switch (tool.slug) {
     case "transfer":
       return <TransferWorkbench />;
-    case "ai-ppt":
-      return <AiPptWorkbench />;
     case "text-to-image":
       return <TextImageWorkbench />;
     case "lottery":
@@ -88,14 +83,6 @@ export function ToolWorkbench({ tool }: { tool: ToolDefinition }) {
       return <AaSettleWorkbench />;
     case "tts-reader":
       return <TtsReaderWorkbench />;
-    case "payslip-explain":
-      return <AiExplainWorkbench task="payslip" />;
-    case "checkup-explain":
-      return <AiExplainWorkbench task="checkup" />;
-    case "medication-guide":
-      return <AiExplainWorkbench task="medication" />;
-    case "letter-draft":
-      return <LetterWorkbench />;
     case "invoice-print":
       return <InvoicePrintWorkbench />;
     case "wifi-qrcode":

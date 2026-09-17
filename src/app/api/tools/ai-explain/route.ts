@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
 
 import {
-  AI_EXPLAIN_TASKS,
   buildExplainSystemPrompt,
   buildExplainUserPrompt,
-  buildLetterUserPrompt,
   cleanInput,
-  parseLetterDetails,
   validateExplainRequest,
-  type AiExplainTask,
 } from "@/lib/server/ai-explain";
-import { aiDailyLimit, consumeAiCredit, AiRateLimitError, cheapAiDailyLimit, clientIpOf } from "@/lib/server/ai-rate-limit";
+import { consumeAiCredit, AiRateLimitError, cheapAiDailyLimit, clientIpOf } from "@/lib/server/ai-rate-limit";
 import { DeepSeekConfigurationError, DeepSeekUpstreamError, streamChatCompletion } from "@/lib/server/deepseek";
 
 export const runtime = "nodejs";
@@ -32,12 +28,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "请求格式不正确。" }, { status: 400 });
   }
 
-  const rawTask = body.task;
-  const task: AiExplainTask = AI_EXPLAIN_TASKS.find((item) => item === rawTask) ?? "payslip";
+  if (body.task !== "hanzi") {
+    return NextResponse.json({ error: "该功能不存在。" }, { status: 404 });
+  }
 
   try {
-    // 儿童识字这类轻量查询给更高的独立额度，避免学习中途被限流
-    consumeAiCredit(clientIpOf(request), task === "hanzi" ? cheapAiDailyLimit() : aiDailyLimit());
+    consumeAiCredit(clientIpOf(request), cheapAiDailyLimit());
   } catch (error) {
     if (error instanceof AiRateLimitError) {
       return NextResponse.json({ error: error.message }, { status: 429 });
@@ -45,25 +41,13 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  let systemPrompt: string;
-  let userPrompt: string;
-
-  if (task === "letter") {
-    const details = parseLetterDetails(body);
-    if (!details) {
-      return NextResponse.json({ error: "请填写事实经过，并选择信件类型。" }, { status: 400 });
-    }
-    systemPrompt = buildExplainSystemPrompt("letter");
-    userPrompt = buildLetterUserPrompt(details);
-  } else {
-    const input = cleanInput(body.input);
-    const error = validateExplainRequest(task, input);
-    if (error) {
-      return NextResponse.json({ error }, { status: 400 });
-    }
-    systemPrompt = buildExplainSystemPrompt(task);
-    userPrompt = buildExplainUserPrompt(task, input, cleanInput(body.extra, 300) || undefined);
+  const input = cleanInput(body.input);
+  const error = validateExplainRequest(input);
+  if (error) {
+    return NextResponse.json({ error }, { status: 400 });
   }
+  const systemPrompt = buildExplainSystemPrompt();
+  const userPrompt = buildExplainUserPrompt(input, cleanInput(body.extra, 300) || undefined);
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
