@@ -150,6 +150,79 @@ services:
       default:
       chaxun_shared:
 
+  # Separate trust boundary: only cloudflared shares this loopback listener.
+  tunnel-gateway:
+    profiles: [tunnel]
+    image: caddy:2.10.2-alpine
+    init: true
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    # No published ports; Caddy binds 127.0.0.1:8081 inside this namespace.
+    volumes:
+      - ./deploy/Caddyfile.tunnel:/etc/caddy/Caddyfile:ro
+    read_only: true
+    tmpfs:
+      - /data
+      - /config
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "wget -q -T 3 -O /dev/null --header='Host: tools.duwu.me' --header='CF-Connecting-IP: 127.0.0.1' http://127.0.0.1:8081/ || exit 1"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      default:
+      chaxun_shared:
+
+  cloudflared:
+    profiles: [tunnel]
+    image: cloudflare/cloudflared:2026.9.1
+    user: "65532:65532"
+    init: true
+    restart: unless-stopped
+    network_mode: "service:tunnel-gateway"
+    depends_on:
+      tunnel-gateway:
+        # Do not wait on connector readiness to start the connector.
+        condition: service_started
+    command:
+      - tunnel
+      - --metrics
+      - 127.0.0.1:2000
+      - run
+      - --token-file
+      - /etc/alltools/cloudflared.token
+    volumes:
+      - type: bind
+        source: /etc/alltools/cloudflared.token
+        target: /etc/alltools/cloudflared.token
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # Distroless has no shell/wget. This built-in command checks /ready.
+    healthcheck:
+      test: ["CMD", "cloudflared", "tunnel", "--metrics", "127.0.0.1:2000", "ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
 volumes:
   asr-models:
   transfer_data:

@@ -15,7 +15,7 @@
 - 备份位于同一数据卷的 `backups/YYYY-MM-DD`，支持误删除恢复，但不防整机/硬盘损坏；异机备份需要另行提供备份目的地。删除的内容可能在近期备份中最多保留 7 天。
 - 恢复时先停止 app 和 maintenance，对现有卷另作备份，将选定快照的 `transfer.sqlite` 和 `files/` 复制至一个新的独立卷（不要把数据库硬链接回运行目录），验证 `PRAGMA integrity_check` 后切换卷并启动。恢复不保留登录会话，用户重新登录。
 - 可手动执行 `docker exec alltools-transfer-maintenance-1 node scripts/transfer-maintenance.mjs --once`，检查备份完成记录与容器日志。无每日完成记录说明备份未成功，不能据此承诺可恢复。
-- 剩余空间低于 5 GiB 时拒绝新建内容；预留未完成上传的空间。现有 HTTP/IP 入口仍使用未加密传输，页面明确提示；并未配置或宣称 HTTPS。
+- 剩余空间低于 5 GiB 时拒绝新建内容；预留未完成上传的空间。主域名 `tools.duwu.me` 经 Cloudflare Tunnel 提供 HTTPS，直连 `http://<服务器>:9999` 仍是未加密 HTTP，页面在非 HTTPS 环境下明确提示。
 
 已开放 61 个工具。
 
@@ -60,6 +60,19 @@ docker compose --env-file .env up --build
 
 服务默认监听 `0.0.0.0:9999`，健康检查在容器内访问首页。生产环境使用只读根文件系统、无 Linux capabilities 的非 root Node 进程。
 
+### Cloudflare Tunnel（tools.duwu.me）
+
+生产主域名走 Cloudflare Tunnel，不经公网开放端口：
+
+- Cloudflare 侧：隧道 `alltools-production`（远程管理模式），ingress 将 `tools.duwu.me` 转发到 `http://127.0.0.1:8081`；DNS 为指向 `<隧道ID>.cfargotunnel.com` 的橙云 CNAME。
+- 连接器 `cloudflared` 与 `tunnel-gateway`（Caddy）共享网络命名空间：Caddy 只绑定回环 `127.0.0.1:8081`，端口不发布到宿主机；连接器用 token 文件认证。两个服务由 `COMPOSE_PROFILES=tunnel` 启用（见 `compose.yaml` 的 tunnel profile）。
+- `tunnel-gateway` 读取 `deploy/Caddyfile.tunnel`：仅接受 `Host: tools.duwu.me` 且带 `CF-Connecting-IP` 的请求，覆写 `X-Suishou-Client-IP` / `X-Forwarded-For` / `X-Real-IP` 为 Cloudflare 提供的访客 IP，并设置 `X-Forwarded-Proto: https`。`CF-Connecting-IP` 只是地址信息、不是认证；信任边界是回环绑定加网络隔离，因此 8081 绝不能发布到宿主机，否则任何直连进程都能伪造该头。
+- 服务器端凭据 `/etc/alltools/cloudflared.token`（root 属主、组 65532、640 权限），内容为隧道 token，不得提交或写入日志。
+- 原 `9999` 直连入口保留（应急与内网使用），其 Caddy 继续以直连对端地址覆写客户端 IP 头，不信任访客自带的 Cloudflare 头。
+- Cloudflare 代理对单请求体与总时长有平台限制（免费版上传体 100 MiB），大文件上传、长时媒体处理可能受影响；超限时优先使用 9999 直连入口。
+
+启用步骤：在 `/etc/alltools/alltools.env` 设置 `COMPOSE_PROFILES=tunnel`、`NEXT_PUBLIC_SITE_URL=https://tools.duwu.me`、`NEXT_PUBLIC_PRIVATE_QUERY_URL=https://tools.duwu.me/private-query`，写入 token 文件后 `docker compose --profile tunnel up -d cloudflared tunnel-gateway`。回滚到旧版本会移除 tunnel profile 的两个容器，主域名将不可达，需回滚 Cloudflare DNS 或恢复 profile。
+
 ### 云端工具依赖
 
 云端工具在容器内调用以下系统组件（镜像均已安装）：`qpdf`（PDF 压缩）、`ffmpeg`（视频压缩、提取音频、音频转换）、`libreoffice-writer` + `fonts-noto-cjk`（PDF / Word 转换）、`heif-convert`（HEIC 转换）。可通过 `ALLTOOLS_MAX_UPLOAD_MB` 控制上传大小上限（默认 100）。依赖缺失时对应接口返回 503，页面提示服务暂不可用；媒体类处理超时上限 10 分钟。
@@ -75,7 +88,7 @@ GitHub Actions 分为两段：PR 与推送 `main` 会运行验证；通过验证
 
 服务器端还需要：
 
-- `/etc/alltools/alltools.env`：包含 `NEXT_PUBLIC_SITE_URL`、`ALLTOOLS_BIND_ADDRESS`、`ALLTOOLS_PORT`
+- `/etc/alltools/alltools.env`：包含 `NEXT_PUBLIC_SITE_URL`、`ALLTOOLS_BIND_ADDRESS`、`ALLTOOLS_PORT`；启用隧道时另有 `COMPOSE_PROFILES=tunnel` 与 `/etc/alltools/cloudflared.token`
 - `/usr/local/sbin/alltools-deploy`：根用户拥有、仅允许 `ci-deploy` 免密 sudo 调用
 - `/opt/alltools/releases`：仅供 `ci-deploy` 上传发布文件
 

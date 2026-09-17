@@ -1,4 +1,7 @@
 import dnsPromises from "node:dns/promises";
+import { isIP } from "node:net";
+
+import { clientIpOf } from "@/lib/server/client-ip";
 import { NextResponse } from "next/server";
 
 import { formatGeoLine, isPrivateIp, normalizeLookupQuery, type GeoInfo } from "@/lib/ip-lookup";
@@ -100,8 +103,8 @@ async function resolveDomain(domain: string): Promise<DnsLookupResult> {
 }
 
 function clientIpFromHeaders(request: Request): { ip: string; isPrivate: boolean } {
-  const forwarded = request.headers.get("x-forwarded-for");
-  const ip = forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip")?.trim() || "";
+  const candidate = clientIpOf(request);
+  const ip = isIP(candidate) ? candidate : "";
   return { ip, isPrivate: ip === "" || isPrivateIp(ip) };
 }
 

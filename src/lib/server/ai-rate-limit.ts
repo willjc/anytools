@@ -52,12 +52,4 @@ export function consumeAiCredit(ip: string, limit: number = aiDailyLimit()): voi
   entry.used += 1;
 }
 
-/** 从代理链头中提取客户端 IP（Caddy 会写入 X-Forwarded-For）。 */
-export function clientIpOf(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) return first;
-  }
-  return request.headers.get("x-real-ip")?.trim() || "unknown";
-}
+export { clientIpOf } from "@/lib/server/client-ip";

@@ -1,0 +1,39 @@
+{
+  admin off
+}
+
+# 仅 cloudflared 可达：连接器共享本容器网络命名空间，Caddy 只绑定回环地址。
+# 不带 tools.duwu.me 主机名或缺少 CF-Connecting-IP 的请求一律 403。
+# 该头只是地址信息、不是身份认证；信任边界是回环绑定 + 网络隔离，
+# 任何能直连 8081 的进程都能伪造它，因此本端口绝不能发布到宿主机。
+:8081 {
+  bind 127.0.0.1
+
+  @cloudflare {
+    host tools.duwu.me
+    header CF-Connecting-IP *
+  }
+  handle @cloudflare {
+    redir /private-query /private-query/ 308
+
+    @privateQuery path /private-query/*
+    handle @privateQuery {
+      reverse_proxy private-query:8080 {
+        header_up X-Suishou-Client-IP {http.request.header.CF-Connecting-IP}
+        header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+        header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+        header_up X-Forwarded-Proto https
+      }
+    }
+
+    handle {
+      reverse_proxy app:3000 {
+        header_up X-Suishou-Client-IP {http.request.header.CF-Connecting-IP}
+        header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+        header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+        header_up X-Forwarded-Proto https
+      }
+    }
+  }
+  respond 403
+}
