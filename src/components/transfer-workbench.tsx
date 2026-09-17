@@ -194,6 +194,6 @@ export function TransferWorkbench({ shareToken }: { shareToken?: string }) {
     </>}
     {manualCopy && <div className="mt-5"><label className="text-sm">手动复制<textarea ref={copyInput} className={`mt-2 min-h-24 ${inputClass}`} readOnly value={manualCopy} /></label><button className={`${buttonClass} mt-2`} onClick={() => setManualCopy("")}>关闭复制区</button></div>}
     {message && <p role={error ? "alert" : "status"} className={`mt-5 rounded-xl px-4 py-3 text-sm leading-6 ${error ? "bg-red-50 text-red-800" : "bg-emerald-50 text-emerald-950"}`}>{message}</p>}
-    {!shareToken && <p className="mt-6 text-xs leading-5 text-slate-500">内容保存在服务器，3 年到期自动清理。当前 HTTP 连接未加密，请勿存放敏感资料。</p>}
+    {!shareToken && <p className="mt-6 text-xs leading-5 text-slate-500">内容保存在服务器，3 年到期自动清理。使用 HTTP 直连时传输不加密，请优先通过 HTTPS 域名访问，敏感资料仍应谨慎存放。</p>}
   </section>;
 }

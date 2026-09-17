@@ -62,7 +62,7 @@ export function WordToPdfWorkbench() {
           {isProcessing ? <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> : <Download aria-hidden="true" className="size-4" />}
           {isProcessing ? "正在转换" : "上传并转换为 PDF"}
         </button>
-        <p className="text-xs leading-5 text-slate-500">由服务器端 LibreOffice 完成转换，文件只用于本次任务并在转换后清理。当前站点使用 HTTP，上传内容在传输途中未加密，请勿处理敏感文档。</p>
+        <p className="text-xs leading-5 text-slate-500">由服务器端 LibreOffice 完成转换，文件只用于本次任务并在转换后清理。使用 HTTP 直连时传输不加密，请优先通过 HTTPS 域名访问，敏感文档仍应谨慎处理。</p>
       </div>
       <p aria-live="polite" className={`mt-5 rounded-2xl px-4 py-3 text-sm leading-6 ${isError ? "bg-red-50 text-red-800" : "bg-emerald-50 text-emerald-950"}`}>{message}</p>
     </section>
