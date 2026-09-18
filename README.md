@@ -75,7 +75,7 @@ docker compose --env-file .env up --build
 
 ### 云端工具依赖
 
-云端工具在容器内调用以下系统组件（镜像均已安装）：`qpdf`（PDF 压缩）、`ffmpeg`（视频压缩、提取音频、音频转换）、`libreoffice-writer` + `fonts-noto-cjk`（PDF / Word 转换）、`heif-convert`（HEIC 转换）。可通过 `ALLTOOLS_MAX_UPLOAD_MB` 控制上传大小上限（默认 100）。依赖缺失时对应接口返回 503，页面提示服务暂不可用；媒体类处理超时上限 10 分钟。
+云端工具在容器内调用以下系统组件（镜像均已安装）：`qpdf`（PDF 加密/轻度压缩）、`ghostscript`（PDF 压缩的图片降采样重编码）、`ffmpeg`（视频压缩、提取音频、音频转换）、`libreoffice-writer` + `fonts-noto-cjk`（PDF / Word 转换）、`heif-convert`（HEIC 转换）、`calibre`（电子书格式转换）。可通过 `ALLTOOLS_MAX_UPLOAD_MB` 控制上传大小上限（默认 100）。依赖缺失时对应接口返回 503，页面提示服务暂不可用；媒体类处理超时上限 10 分钟。
 
 云端识别还依赖两个外部服务：
 

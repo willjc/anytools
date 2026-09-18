@@ -28,10 +28,11 @@ RUN groupadd --system --gid 1001 nodejs \
 # The production host sits behind a slow route to deb.debian.org; build from
 # an in-country mirror and keep the heavyweight installs in separate layers
 # so a completed layer stays cached across releases.
+# PDF 压缩用 Ghostscript 做图片降采样与重编码（qpdf 只做结构优化、压不动扫描件）。
 RUN set -eux; \
   find /etc/apt -type f \( -name "*.sources" -o -name "sources.list" \) -exec sed -i 's|deb.debian.org|mirrors.aliyun.com|g' {} + \
   && apt-get update \
-  && apt-get install -y --no-install-recommends qpdf ffmpeg libheif-examples \
+  && apt-get install -y --no-install-recommends qpdf ffmpeg libheif-examples ghostscript \
   && rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
