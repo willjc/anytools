@@ -40,8 +40,22 @@ compose=(env "RELEASE_ID=$release_id" docker compose --project-name "$PROJECT_NA
 # 启用时隧道连接器和它的回环网关必须过同样的健康门控：cloudflared 的
 # healthcheck 打的是内置 /ready 端点，只有和 Cloudflare 边缘建立连接才算 healthy，
 # 否则隧道挂了而发布照样绿灯。未启用 profile 时保持原有纯 HTTP 部署路径。
-services=(app gateway asr)
-if "${compose[@]}" config --services | grep -qx tunnel-gateway; then
+# 只保留 compose.yaml 里真实存在的服务：服务器环境可能残留已删除的 profile
+#（如 rembg），config --services 会把它列出来，但 up 不会再创建该容器，
+# 直接拿来做门控会误报 “no such service”。取交集即可兼容新旧环境。
+mapfile -t available_services < <("${compose[@]}" config --services)
+is_available() {
+  local wanted="$1" s
+  for s in "${available_services[@]}"; do
+    [[ "$s" == "$wanted" ]] && return 0
+  done
+  return 1
+}
+services=()
+for s in app gateway asr; do
+  is_available "$s" && services+=("$s")
+done
+if is_available tunnel-gateway; then
   services+=(tunnel-gateway cloudflared)
 fi
 
