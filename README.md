@@ -2,7 +2,7 @@
 
 一个在线工具站。多数工具在浏览器本地完成处理，文件不离开设备；标注「云端处理」的功能由服务器即时处理后即删。
 
-「随手传」是云端保存工具，规则不同：文字和文件默认保存 3 年，用户可提前删除。当前注册表共 61 个工具，以 `src/lib/tools.ts` 为准。
+「随手传」是云端保存工具，规则不同：文字和文件默认保存 3 年，用户可提前删除。当前注册表共 56 个工具，以 `src/lib/tools.ts` 为准。
 
 ## 随手传
 
@@ -17,13 +17,13 @@
 - 可手动执行 `docker exec alltools-transfer-maintenance-1 node scripts/transfer-maintenance.mjs --once`，检查备份完成记录与容器日志。无每日完成记录说明备份未成功，不能据此承诺可恢复。
 - 剩余空间低于 5 GiB 时拒绝新建内容；预留未完成上传的空间。主域名 `tools.duwu.me` 经 Cloudflare Tunnel 提供 HTTPS，直连 `http://<服务器>:9999` 仍是未加密 HTTP，页面在非 HTTPS 环境下明确提示。
 
-已开放 61 个工具。
+已开放 56 个工具。
 
 PDF 17 个：拆分 / 合并 / 页面整理 / 加水印 / 加页码 / 改字 / 压缩（云端）/ 转 Word（云端）/ 转图片 / 图片转 PDF / Word 转 PDF（云端）/ 加密与解锁（云端）/ 转 Excel（云端）/ 发票拼版打印 / 电子书格式转换（云端）/ 元数据编辑 / 签名盖章。
 
-图片 11 个：压缩 / 格式转换 / 裁剪 / 加水印 / 拼接 / 九宫格切图 / HEIC 转 JPG（云端）/ 改尺寸 / 隐私遮挡 / 图片转文字（云端）/ 去背景（云端）。
+图片 10 个：压缩 / 格式转换 / 裁剪 / 加水印 / 拼接 / 九宫格切图 / HEIC 转 JPG（云端）/ 改尺寸 / 隐私遮挡 / 图片转文字（云端）。
 
-生成 13 个：二维码生成 / WiFi 二维码 / 文本整理与字数统计 / Markdown 导出（云端）/ Markdown 预览 / 文档转 Markdown（云端）/ 文字长图生成器 / 文章朗读器 / AI PPT（云端）/ 工资条解读（云端）/ 体检报告解读（云端）/ 药品说明书大白话（云端）/ 辞职信与投诉信（云端）。
+生成 8 个：二维码生成 / WiFi 二维码 / 文本整理与字数统计 / Markdown 导出（云端）/ Markdown 预览 / 文档转 Markdown（云端）/ 文字长图生成器 / 文章朗读器。
 
 音视频 5 个（均云端）：视频压缩 / 视频提取音频 / 音频格式转换 / 视频转 GIF / GIF 压缩。
 
@@ -76,6 +76,13 @@ docker compose --env-file .env up --build
 ### 云端工具依赖
 
 云端工具在容器内调用以下系统组件（镜像均已安装）：`qpdf`（PDF 压缩）、`ffmpeg`（视频压缩、提取音频、音频转换）、`libreoffice-writer` + `fonts-noto-cjk`（PDF / Word 转换）、`heif-convert`（HEIC 转换）。可通过 `ALLTOOLS_MAX_UPLOAD_MB` 控制上传大小上限（默认 100）。依赖缺失时对应接口返回 503，页面提示服务暂不可用；媒体类处理超时上限 10 分钟。
+
+云端识别还依赖两个外部服务：
+
+- **MinerU API**（`MINERU_API_TOKEN`，可选）：图片转文字与文档转 Markdown；未配置时对应接口返回 503。
+- **ASR 微服务**（`ALLTOOLS_ASR_URL`，compose 内默认 `http://asr:8000`）：`asr/main.py` 用 faster-whisper（CPU int8，`ASR_MODEL_SIZE` 默认 `base`）为汉字笔顺工具的语音输入做转写；模型首次启动从 HF 镜像下载到命名卷 `asr-models`。未配置时语音录入不可用，可改为手动输入文字。
+
+`DEEPSEEK_API_KEY`（可选）供汉字笔顺的 AI 字义讲解使用，按 IP 每日限额（`ALLTOOLS_AI_DAILY_LIMIT`）；未配置时讲解功能返回 503，不影响其他工具。
 
 ## CI/CD
 

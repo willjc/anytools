@@ -5,8 +5,7 @@ readonly APP_ROOT="/opt/alltools"
 readonly RELEASES_DIR="$APP_ROOT/releases"
 readonly ENV_FILE="/etc/alltools/alltools.env"
 readonly PROJECT_NAME="alltools"
-# rembg 与 asr 必须一起纳入门控：它们不被检查时，服务没起来而发布照样绿灯
-# （2026-09-11 暴露的三个 rembg 缺陷都是在「发布成功」之后才发现的）。
+# asr 必须一起纳入门控：它不被检查时，服务没起来而发布照样绿灯。
 # asr 首次启动要下载模型、start_period 为 400s，所以把等待预算放到 600s。
 readonly MAX_HEALTH_ATTEMPTS=120
 
@@ -41,7 +40,7 @@ compose=(env "RELEASE_ID=$release_id" docker compose --project-name "$PROJECT_NA
 # 启用时隧道连接器和它的回环网关必须过同样的健康门控：cloudflared 的
 # healthcheck 打的是内置 /ready 端点，只有和 Cloudflare 边缘建立连接才算 healthy，
 # 否则隧道挂了而发布照样绿灯。未启用 profile 时保持原有纯 HTTP 部署路径。
-services=(app gateway rembg asr)
+services=(app gateway asr)
 if "${compose[@]}" config --services | grep -qx tunnel-gateway; then
   services+=(tunnel-gateway cloudflared)
 fi

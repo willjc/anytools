@@ -17,7 +17,6 @@ services:
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
       ALLTOOLS_AI_DAILY_LIMIT: ${ALLTOOLS_AI_DAILY_LIMIT:-}
       ALLTOOLS_ASR_URL: ${ALLTOOLS_ASR_URL:-http://asr:8000}
-      ALLTOOLS_REMBG_URL: ${ALLTOOLS_REMBG_URL:-http://rembg:8000}
     read_only: true
     volumes:
       - transfer_data:/data/transfer
@@ -88,35 +87,6 @@ services:
       timeout: 5s
       retries: 10
       start_period: 400s
-
-  rembg:
-    build:
-      context: ./rembg
-    image: alltools-rembg:${RELEASE_ID:-local}
-    init: true
-    restart: unless-stopped
-    environment:
-      # pymatting 的 @njit(cache=True) 需要可写的 JIT 编译缓存目录。
-      # 容器是只读文件系统，必须显式指向 tmpfs，否则 numba 找不到可用
-      # locator 会抛 "no locator available" 并让容器反复崩溃重启。
-      NUMBA_CACHE_DIR: /tmp/numba-cache
-    read_only: true
-    tmpfs:
-      - /tmp
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    healthcheck:
-      test:
-        - CMD
-        - python
-        - -c
-        - "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/health')"
-      interval: 20s
-      timeout: 5s
-      retries: 10
-      start_period: 60s
 
   gateway:
     image: caddy:2.10.2-alpine

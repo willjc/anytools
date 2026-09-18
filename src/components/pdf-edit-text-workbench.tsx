@@ -264,6 +264,11 @@ export function PdfEditTextWorkbench() {
           <input className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" id="edit-replacement" onChange={(event) => setReplacement(event.target.value)} placeholder="先在这里输入新文字，再去框选" type="text" value={replacement} />
           <p className="text-xs leading-5 text-slate-500">用法：① 先输入新文字 → ② 在左侧预览里框选要改掉的旧文字 → ③ 点导出。支持中文。</p>
 
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
+            <p className="font-semibold">⚠️ 新文字只是「盖」在原文上面，原文字仍留在文件里，复制、搜索或用 PDF 编辑器打开都能看到原文。</p>
+            <p className="mt-1">改错别字、调日期、补内容没问题；但<strong>不要用它遮盖身份证号、签名等敏感信息</strong>——本工具做不到真正删除原文。</p>
+          </div>
+
           <ul className="space-y-2">
             {patches.map((entry, index) => (
               <li className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700" key={entry.id}>

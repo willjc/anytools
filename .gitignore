@@ -41,6 +41,9 @@ yarn-error.log*
 .zcode/
 .workbuddy-ai/
 
+# Local experiment (not part of this repo)
+sand-assault/
+
 # vercel
 .vercel
 

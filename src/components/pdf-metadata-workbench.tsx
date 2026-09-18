@@ -67,11 +67,11 @@ export function PdfMetadataWorkbench() {
     };
   }
 
-  async function save(clearDates: boolean) {
+  async function save(clearDates: boolean, patchOverride?: Partial<ReturnType<typeof collectPatch>>) {
     if (!bytes || !file) return;
     setIsWorking(true);
     try {
-      const updated = await applyPdfMetadata(bytes, { ...collectPatch(), clearDates });
+      const updated = await applyPdfMetadata(bytes, { ...collectPatch(), ...patchOverride, clearDates });
       const blob = new Blob([updated as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -168,7 +168,8 @@ export function PdfMetadataWorkbench() {
               disabled={!bytes || isWorking}
               onClick={() => {
                 setFields((previous) => ({ ...previous, creator: "", producer: "", subject: "", keywords: "" }));
-                void save(true);
+                // setState 是异步的，必须把清空后的字段显式传给 save，否则导出的还是原痕迹
+                void save(true, { creator: "", producer: "", subject: "", keywords: [] });
               }}
               type="button"
             >

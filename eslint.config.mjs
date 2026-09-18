@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Vendored build artifacts (pdf.js worker) that must stay minified.
     "public/**/*.mjs",
+    // Local experiment living inside the workspace but outside the project.
+    "sand-assault/**",
   ]),
 ]);
 
