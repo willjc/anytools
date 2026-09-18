@@ -15,3 +15,43 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 任何 UI / 样式 / 新页面的改动,必须先阅读仓库根目录的 `DESIGN.md`(暖纸感画布 + 翡翠主色 + 暖中性色阶,slate 色阶已在 `globals.css` 中整体重映射)。新增工具只改 `src/lib/tools.ts` + workbench 组件,样式类名复用 DESIGN.md 第 4 节的组合,禁止引入色板之外的品牌色。
 
 <!-- END:design-agent-rules -->
+
+<!-- BEGIN:deploy-agent-rules -->
+
+# 发布与服务器运维(必读)
+
+## 发布流程
+
+- 推送 `main` 即发布:GitHub Actions 先跑 `Verify`(lint / typecheck / test / build),通过后 `Deploy production` 把不可变的 Git SHA 发布目录 rsync 到服务器 `/opt/alltools/releases/<sha>`,再用 `sudo /usr/local/sbin/alltools-deploy <sha>` 构建、健康检查、切换 `/opt/alltools/current`。健康检查失败会自动回滚到上一个 current。
+- CI 的 `npm run lint` 对**整个工作区**生效,会扫到未跟踪目录。本地 `sand-assault/` 是无关的 Vite 实验项目,已在 `.gitignore` 和 `eslint.config.mjs` 中忽略——不要把它的构建产物提交进来,否则 lint 会红、发布被卡。
+
+## 部署脚本:仓库版 vs 服务器版
+
+- `deploy/alltools-deploy`(仓库)与 `/usr/local/sbin/alltools-deploy`(服务器,root:root 755)是**两份独立文件**,rsync 不会同步它。
+- 仓库版已用「健康门控服务与 `compose config --services` 实际输出取交集」的方式兼容新旧环境(见 commit `d67fa52`),所以增删 compose 服务时即使服务器脚本偏旧,一般也不会再误报 `no such service`。
+- 但若改了门控**逻辑本身**(不只是服务列表),仍需手动同步到服务器才能生效:
+  ```bash
+  scp deploy/alltools-deploy alltools-1panel-prod:/tmp/alltools-deploy.new
+  ssh alltools-1panel-prod 'bash -n /tmp/alltools-deploy.new \
+    && sudo -n install -o root -g root -m 755 /tmp/alltools-deploy.new /usr/local/sbin/alltools-deploy \
+    && rm -f /tmp/alltools-deploy.new'
+  ```
+
+## 服务器登录(本地已配好密钥)
+
+- 日常管理:`ssh alltools-1panel-prod`(见 `~/.ssh/config`),ops 用户,密钥 `~/.ssh/alltools-ops-36-133-40-235`,`sudo -n` 免密可用,可操作 docker、改部署脚本。
+- CI 专用:`ci-deploy` 用户,密钥 `~/.ssh/alltools-ci-deploy`,仅用于 Actions,权限受限,不要用它做日常操作。
+- 常用排查:
+  ```bash
+  ssh alltools-1panel-prod 'sudo -n docker ps --format "{{.Names}}\t{{.Status}}"'   # 容器状态
+  ssh alltools-1panel-prod 'sudo -n readlink -f /opt/alltools/current'              # 当前版本
+  ssh alltools-1panel-prod 'sudo -n docker logs --tail 100 alltools-app-1'          # 应用日志
+  ```
+
+## 后台微服务
+
+- `asr`(faster-whisper,CPU int8):汉字笔顺的语音录入转写,compose 内 `http://asr:8000`,模型首次启动下载到 `asr-models` 卷。已纳入部署健康门控。
+- 2026-09-19 已下线 `rembg` 去背景微服务(代码、compose 服务、部署门控、旧镜像均已移除)。
+
+<!-- END:deploy-agent-rules -->
+
